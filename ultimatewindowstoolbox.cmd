@@ -9,17 +9,16 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     title The Ultimate Windows Toolbox
     cls
     color b
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo ============================================================================
     echo "The Ultimate Windows Toolbox - Works in Windows 10 and Windows 11"
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~                                    
+    echo ============================================================================                                    
     echo 1. Run the Chris Titus Tech Winutil
     echo 2. Reset Windows Update
     echo 3. Activate Windows for free
     echo 4. Find and Repair Problems in Windows
     echo 5. Test your RAM on next reboot
     echo 0. Exit
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo ============================================================================
     set choice=
     set /p choice=Choose an option and type the corresponding number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
