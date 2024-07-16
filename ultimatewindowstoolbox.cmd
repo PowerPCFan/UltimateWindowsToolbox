@@ -63,8 +63,7 @@ goto start
     net start cryptSvc
     net start bits
     net start msiserver
-    shutdown /r /t 10
-    start powershell -noexit -command "echo **Your PC will restart in 10 seconds. Please wait.**"
+    shutdown /r /c "Shutting down in 10 seconds." /t 10
 goto start
 
 :massgrave
@@ -74,10 +73,11 @@ goto start
 
 :repairverify
     cls
-    echo Your PC will reboot after this! Are you sure you would like to proceed?
+    echo You need to REBOOT your PC after running this script. 
+    echo Press 1 to continue and 2 to go back.
     echo -----------------------------------------------------------------------------------
-    echo 1. YES, Proceed
-    echo 2. NO, Go back
+    echo 1. Proceed
+    echo 2. Go back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
