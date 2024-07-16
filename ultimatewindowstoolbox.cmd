@@ -8,7 +8,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     cls
     title The Ultimate Windows Toolbox
     cls
-    color b
+    color 0f
     echo ============================================================================
     echo "The Ultimate Windows Toolbox - Works in Windows 10 and Windows 11"
     echo ============================================================================                                    
