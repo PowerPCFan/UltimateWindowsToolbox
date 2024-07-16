@@ -17,6 +17,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     echo 3. Activate Windows for free
     echo 4. Find and Repair Problems in Windows
     echo 5. Test your RAM on next reboot
+    echo 6. Remove Microsoft Edge
     echo 0. Exit
     echo ============================================================================
     set choice=
@@ -27,6 +28,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     if '%choice%'=='3' goto massgrave
     if '%choice%'=='4' goto repairverify
     if '%choice%'=='5' goto ramtestverify
+    if '%choice%'=='6' goto removemsedge
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
@@ -110,6 +112,55 @@ goto start
     cls
     start powershell -noexit -command "cmd /k C:\WINDOWS\system32\MdSched.exe"
 goto start
+
+:removemsedge
+    @echo off
+
+    echo Taking ownership of C:\Program Files (x86)\Microsoft...
+    takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
+
+    echo Granting full control permissions...
+    icacls "C:\Program Files (x86)\Microsoft" /grant %username%:F /t > nul 2>&1
+
+    echo Deleting C:\Program Files (x86)\Microsoft directory and its contents...
+    rd /s /q "C:\Program Files (x86)\Microsoft"
+    echo Deletion complete.
+
+    echo Deleting Microsoft Edge shortcut from desktop...
+    del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
+    echo Shortcut deletion complete.
+
+    echo ============================================================================
+    echo                 Do you want to install Google Chrome?
+    echo ============================================================================
+    echo 1. YES
+    echo 2. NO
+    echo ============================================================================
+     set option=
+      set /p option=Choose an option and type the corresponding number. 
+        if not '%option%'=='' set choice=%choice:~0,100%
+        if '%option%'=='1' goto chromeinstaller
+
+
+:chromeinstaller
+   bitsadmin /transfer ChromeDownload /download /priority normal https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFE6517C0-3B35-3DCD-D0DB-66312FA03132%7D%26lang%3Den%26browser%3D3%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe "%USERPROFILE%\Downloads\ChromeSetup.exe"
+   echo successfully downloaded Google Chrome
+   echo go run it from your downloads folder
+   pause
+   goto start
+
+
+
+REM Check if the shortcut exists
+if exist "%USERPROFILE%\Desktop"\Microsoft Edge.lnk"" (
+    del "%desktop_folder%\%shortcut_name%"
+    echo Edge shortcut removed successfully.
+) else (
+    echo Edge shortcut not found on the desktop.
+) 
+pause
+
+
 
 :IsAdmin
 reg query "HKU\S-1-5-19\Environment"
