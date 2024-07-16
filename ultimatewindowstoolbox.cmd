@@ -144,7 +144,7 @@ goto start
         echo Edge was removed from the start menu successfully. 
 
         del "%appdata%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk"
-        del "%userprofile%\AppData\Local\IconCache.db"
+        del "%userprofile%\AppData\Local\iconcache.db"
         echo Edge was removed from the taskbar successfully. 
       
         pause
