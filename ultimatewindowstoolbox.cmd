@@ -123,6 +123,7 @@ goto start
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     echo                                      WARNING!
     echo Make sure you have another browser downloaded as this will remove Edge permanently!
+    echo Tip: You can install a browser by going to the homepage of this utility and selecting option 7!
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
         echo Taking ownership of C:\Program Files (x86)\Microsoft...
