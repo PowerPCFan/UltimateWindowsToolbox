@@ -88,9 +88,8 @@ goto start
 
 :repairscript
     cls
-    echo Beginning SFC System Scan...
     sfc /scannow
-    echo Beginning DISM System Scan...
+    cls
     DISM /Online /Cleanup-Image /RestoreHealth  
 goto start
 
