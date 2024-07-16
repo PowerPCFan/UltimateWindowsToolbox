@@ -116,31 +116,39 @@ goto start
 goto start
 
 :removemsedge
+    cls
     @echo off
-echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-echo                                    WARNING!
-echo Make sure you have another browser downloaded as this will remove edge permanently!
-echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-pause
-    echo Taking ownership of C:\Program Files (x86)\Microsoft...
-    takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
-
-    echo Granting full control permissions...
-    icacls "C:\Program Files (x86)\Microsoft" /grant %username%:F /t > nul 2>&1
-
-    echo Deleting C:\Program Files (x86)\Microsoft directory and its contents...
-    rd /s /q "C:\Program Files (x86)\Microsoft"
-    echo Deletion complete.
-
-    echo Deleting Microsoft Edge shortcut from desktop...
-    del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
-    echo Shortcut deletion complete.
-
-    del "%desktop_folder%\%shortcut_name%"
-    echo Edge shortcut removed successfully.
-  
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo                                      WARNING!
+    echo Make sure you have another browser downloaded as this will remove Edge permanently!
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
-    goto start
+        echo Taking ownership of C:\Program Files (x86)\Microsoft...
+        takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
+    
+        echo Granting full control permissions...
+        icacls "C:\Program Files (x86)\Microsoft" /grant %username%:F /t > nul 2>&1
+    
+        echo Deleting C:\Program Files (x86)\Microsoft directory and its contents...
+        rd /s /q "C:\Program Files (x86)\Microsoft"
+        echo Deletion complete.
+    
+        echo Deleting Microsoft Edge shortcut from desktop...
+        del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
+        echo Shortcut deletion complete.
+    
+        del "%desktop_folder%\%shortcut_name%"
+        echo Edge shortcut removed successfully.
+
+        del "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
+        echo Edge was removed from the start menu successfully. 
+
+        del "%appdata%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk"
+        del "%userprofile%\AppData\Local\IconCache.db"
+        echo Edge was removed from the taskbar successfully. 
+      
+        pause
+goto start
 
 
 
