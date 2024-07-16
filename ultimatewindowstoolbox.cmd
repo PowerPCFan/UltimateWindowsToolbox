@@ -18,6 +18,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     echo 4. Find and Repair Problems in Windows
     echo 5. Test your RAM on next reboot
     echo 6. Remove Microsoft Edge
+    echo 7. Install a web browser
     echo 0. Exit
     echo ============================================================================
     set choice=
@@ -29,6 +30,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     if '%choice%'=='4' goto repairverify
     if '%choice%'=='5' goto ramtestverify
     if '%choice%'=='6' goto removemsedge
+    if '%choice%'=='7' goto installbrowsers-chocolatey
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
@@ -150,6 +152,71 @@ goto start
         pause
 goto start
 
+:installbrowsers-chocolatey
+    cls
+        if exist "C:\ProgramData\chocolatey\bin\choco.exe" (
+            echo Chocolatey is installed.
+            pause
+            goto installbrowsers
+        )   
+        else (
+            echo Chocolatey not found. Installing...
+            @echo off
+            @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+            cls
+            pause
+            goto installbrowsers
+        )
+    
+    
+    cls
+    pause
+    
+:installbrowsers
+    cls
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo                          + Web browser installer +
+    echo You can install a web browser here. You may want to do this before or after uninstalling Edge or if you'd like a new browser.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo 1. Install Chrome
+    echo 2. Install Firefox
+    echo 3. Install Brave
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' goto chromeinstall
+    if '%choice%'=='2' goto firefoxinstall
+    if '%choice%'=='3' goto braveinstall
+    if '%choice%'=='0' goto start
+    echo "%choice%" is not valid, try again
+
+:chromeinstall
+    cls
+    start powershell -command "choco install googlechrome -y"
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo This browser may be out of date. Ensure that it's up to date by going into Settings and checking for updates.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    pause
+goto start 
+
+:firefoxinstall
+    cls
+    start powershell -command "choco install firefox -y"
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo This browser may be out of date. Ensure that it's up to date by going into Settings and checking for updates.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    pause
+goto start
+
+:braveinstall
+    cls
+    start powershell -command "choco install brave -y"
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo This browser may be out of date. Ensure that it's up to date by going into Settings and checking for updates.
+    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    pause
+goto start
 
 
 :IsAdmin
