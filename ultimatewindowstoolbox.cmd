@@ -73,7 +73,8 @@ goto start
 
 :repairverify
     cls
-    echo You need to REBOOT your PC after running this script. 
+    echo -----------------------------------------------------------------------------------
+    echo ****You need to REBOOT your PC after running this script.****
     echo Press 1 to continue and 2 to go back.
     echo -----------------------------------------------------------------------------------
     echo 1. Proceed
@@ -87,7 +88,9 @@ goto start
 
 :repairscript
     cls
-    sfc /scannow 
+    echo Beginning SFC System Scan...
+    sfc /scannow
+    echo Beginning DISM System Scan...
     DISM /Online /Cleanup-Image /RestoreHealth  
 goto start
 
