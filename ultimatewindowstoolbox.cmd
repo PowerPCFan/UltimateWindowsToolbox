@@ -17,6 +17,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     echo 3. Activate Windows for free
     echo 4. Find and Repair Problems in Windows
     echo 5. Test your RAM on next reboot
+    echo 6. Remove Microsoft Edge
     echo 0. Exit
     echo ============================================================================
     set choice=
@@ -27,6 +28,7 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "Ver
     if '%choice%'=='3' goto massgrave
     if '%choice%'=='4' goto repairverify
     if '%choice%'=='5' goto ramtestverify
+    if '%choice%'=='6' goto removemsedge
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
@@ -112,6 +114,35 @@ goto start
     cls
     start powershell -noexit -command "cmd /k C:\WINDOWS\system32\MdSched.exe"
 goto start
+
+:removemsedge
+    @echo off
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo                                    WARNING!
+echo Make sure you have another browser downloaded as this will remove edge permanently!
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+pause
+    echo Taking ownership of C:\Program Files (x86)\Microsoft...
+    takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
+
+    echo Granting full control permissions...
+    icacls "C:\Program Files (x86)\Microsoft" /grant %username%:F /t > nul 2>&1
+
+    echo Deleting C:\Program Files (x86)\Microsoft directory and its contents...
+    rd /s /q "C:\Program Files (x86)\Microsoft"
+    echo Deletion complete.
+
+    echo Deleting Microsoft Edge shortcut from desktop...
+    del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
+    echo Shortcut deletion complete.
+
+    del "%desktop_folder%\%shortcut_name%"
+    echo Edge shortcut removed successfully.
+  
+    pause
+    goto start
+
+
 
 :IsAdmin
 reg query "HKU\S-1-5-19\Environment"
