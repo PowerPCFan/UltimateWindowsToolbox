@@ -115,7 +115,11 @@ goto start
 
 :removemsedge
     @echo off
-
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+echo                                    WARNING!
+echo Make sure you have another browser downloaded as this will remove edge permanently!
+echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+pause
     echo Taking ownership of C:\Program Files (x86)\Microsoft...
     takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
 
@@ -130,35 +134,11 @@ goto start
     del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
     echo Shortcut deletion complete.
 
-    echo ============================================================================
-    echo                 Do you want to install Google Chrome?
-    echo ============================================================================
-    echo 1. YES
-    echo 2. NO
-    echo ============================================================================
-     set option=
-      set /p option=Choose an option and type the corresponding number. 
-        if not '%option%'=='' set choice=%choice:~0,100%
-        if '%option%'=='1' goto chromeinstaller
-
-
-:chromeinstaller
-   bitsadmin /transfer ChromeDownload /download /priority normal https://dl.google.com/tag/s/appguid%3D%7B8A69D345-D564-463C-AFF1-A69D9E530F96%7D%26iid%3D%7BFE6517C0-3B35-3DCD-D0DB-66312FA03132%7D%26lang%3Den%26browser%3D3%26usagestats%3D1%26appname%3DGoogle%2520Chrome%26needsadmin%3Dprefers%26ap%3Dx64-statsdef_1%26installdataindex%3Dempty/update2/installers/ChromeSetup.exe "%USERPROFILE%\Downloads\ChromeSetup.exe"
-   echo successfully downloaded Google Chrome
-   echo go run it from your downloads folder
-   pause
-   goto start
-
-
-
-REM Check if the shortcut exists
-if exist "%USERPROFILE%\Desktop"\Microsoft Edge.lnk"" (
     del "%desktop_folder%\%shortcut_name%"
     echo Edge shortcut removed successfully.
-) else (
-    echo Edge shortcut not found on the desktop.
-) 
-pause
+  
+    pause
+    goto start
 
 
 
