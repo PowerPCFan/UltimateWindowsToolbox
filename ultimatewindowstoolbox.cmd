@@ -1,14 +1,28 @@
 @echo off
 cls
-call :IsAdmin
-echo off
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f
+color 0f
+goto check_Permissions
 
+:check_Permissions
+    echo Administrative permissions required. Detecting permissions...
+    ping 127.0.0.1 -n 2 > nul
+
+    net session >nul 2>&1
+    if %errorLevel% == 0 (
+        echo Success: Administrative permissions confirmed. 
+        ping 127.0.0.1 -n 2 > nul
+    ) else (
+        echo Failure: Current permissions inadequate. Please run the command again as administrator.
+        ping 127.0.0.1 -n 2 > nul
+        pause
+        Exit
+    )
+    
+    goto start
 :start
     cls
     title The Ultimate Windows Toolbox
     cls
-    color 0f
     echo ============================================================================
     echo "The Ultimate Windows Toolbox - Works in Windows 10 and Windows 11"
     echo ============================================================================                                    
@@ -159,8 +173,7 @@ goto start
             echo Chocolatey is installed.
             pause
             goto installbrowsers
-        )   
-        else (
+        ) else (
             echo Chocolatey not found. Installing...
             @echo off
             @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
@@ -219,14 +232,5 @@ goto start
     pause
 goto start
 
-
-:IsAdmin
-reg query "HKU\S-1-5-19\Environment"
-If Not %ERRORLEVEL% EQU 0 (
- Cls & echo You must have administrator privileges to continue ... 
- Pause & Exit
-)
-Cls
-goto:eof
 pause
-goto :start
+goto start
