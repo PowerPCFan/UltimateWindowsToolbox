@@ -5,15 +5,17 @@ goto check_Permissions
 
 :check_Permissions
     echo Administrative permissions required. Detecting permissions...
-    ping 127.0.0.1 -n 2 > nul
+    timeout /t 1 /nobreak >null
 
     net session >nul 2>&1
     if %errorLevel% == 0 (
         echo Success: Administrative permissions confirmed. 
-        ping 127.0.0.1 -n 2 > nul
+        timeout /t 1 /nobreak >null
+
     ) else (
         echo Failure: Current permissions inadequate. Please run the command again as administrator.
-        ping 127.0.0.1 -n 2 > nul
+        timeout /t 1 /nobreak >null
+
         pause
         Exit
     )
