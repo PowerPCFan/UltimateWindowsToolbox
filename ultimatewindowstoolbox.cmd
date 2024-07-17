@@ -4,23 +4,16 @@ color 0f
 goto check_Permissions
 
 :check_Permissions
-    echo Administrative permissions required. Detecting permissions...
-    timeout /t 1 /nobreak >null
+   
 
     net session >nul 2>&1
     if %errorLevel% == 0 (
-        echo Success: Administrative permissions confirmed. 
-        timeout /t 1 /nobreak >null
-
+        goto start 
     ) else (
-        echo Failure: Current permissions inadequate. Please run the command again as administrator.
-        timeout /t 1 /nobreak >null
-
+        echo Failure: Current permissions inadequate. Please run the file again as administrator.
         pause
         Exit
     )
-    
-    goto start
 :start
     cls
     title The Ultimate Windows Toolbox
