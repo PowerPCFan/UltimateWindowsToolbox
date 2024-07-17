@@ -86,6 +86,8 @@ goto start
 
 :massgrave
     cls
+    echo Continuing with this will break Microsoft's TOS. Are you sure you'd like to proceed?
+    pause
     powershell -command "irm https://get.activated.win | iex"
 goto start
 
