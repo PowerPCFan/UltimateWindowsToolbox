@@ -4,21 +4,16 @@ color 0f
 goto check_Permissions
 
 :check_Permissions
-    echo Administrative permissions required. Detecting permissions...
-    ping 127.0.0.1 -n 2 > nul
+   
 
     net session >nul 2>&1
     if %errorLevel% == 0 (
-        echo Success: Administrative permissions confirmed. 
-        ping 127.0.0.1 -n 2 > nul
+        goto start 
     ) else (
-        echo Failure: Current permissions inadequate. Please run the command again as administrator.
-        ping 127.0.0.1 -n 2 > nul
+        echo Failure: Current permissions inadequate. Please run the file again as administrator.
         pause
         Exit
     )
-    
-    goto start
 :start
     cls
     title The Ultimate Windows Toolbox
