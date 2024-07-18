@@ -260,28 +260,45 @@ goto start
 
 :apps
     cls
-    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    echo      + APP INSTALLER +
-    echo You can install apps here!
-    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    echo 1. Install a Web Browser
+    echo ==========================
+    echo    + APP INSTALLER +
+    echo Choose a category below:
+    echo ==========================
+    echo 1. Web Browsers
+    echo 2. Communications
+    echo 3. Development
+    echo 4. PDF Viewers + Word Processors
+    echo 5. Game Launchers
+    echo 6. Microsoft Utilities (Sysinternals Suite, Visual C++ Runtimes, etc)
+    echo 7. Multimedia Tools
+    echo 8. Utilities
     echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto installbrowsers
+    if '%choice%'=='1' goto browsers
+    if '%choice%'=='2' goto communications
+    if '%choice%'=='3' goto development
+    if '%choice%'=='4' goto pdf
+    if '%choice%'=='5' goto games
+    if '%choice%'=='6' goto msutilities
+    if '%choice%'=='7' goto multimedia
+    if '%choice%'=='8' goto utilities
     if '%choice%'=='0' goto start
     echo "%choice%" is not valid, try again
 
-:installbrowsers
+:browsers
     cls
-    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    echo                          + Web browser installer +
-    echo You can install a web browser here. You may want to do this before or after uninstalling Edge or if you'd like a new browser.
-    echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    echo ----------------------------------------------------------------------------------------------------
+    echo                                  + Web browser installer +
+    echo You can install a web browser here. 
+    echo You may want to install a browser before or after uninstalling Edge or if you'd like a new browser.
+    echo ----------------------------------------------------------------------------------------------------
+    echo -
     echo 1. Install Chrome
     echo 2. Install Firefox
     echo 3. Install Brave
+    echo 4. Install Microsoft Edge
     echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
@@ -289,8 +306,283 @@ goto start
     if '%choice%'=='1' start powershell -command "choco install googlechrome -y"
     if '%choice%'=='2' start powershell -command "choco install firefox -y"
     if '%choice%'=='3' start powershell -command "choco install brave -y"
-    if '%choice%'=='0' goto start
-    echo "%choice%" is not valid, try again
+    if '%choice%'=='4' start powershell -command "choco install microsoft-edge -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:communications
+    cls
+    echo ---------------------------
+    echo     + Communications +
+    echo ---------------------------
+    echo -
+    echo 1. Discord
+    echo 2. Signal
+    echo 3. Skype
+    echo 4. Slack
+    echo 5. Telegram
+    echo 6. Zoom
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install discord -y"
+    if '%choice%'=='2' start powershell -command "choco install signal -y"
+    if '%choice%'=='3' start powershell -command "choco install skype -y"
+    if '%choice%'=='4' start powershell -command "choco install slack -y"
+    if '%choice%'=='5' start powershell -command "choco install telegram -y"
+    if '%choice%'=='6' start powershell -command "choco install zoom -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:development
+    cls
+    echo ---------------------------
+    echo     + Development +
+    echo ---------------------------
+    echo -
+    echo 1. GitHub Desktop
+    echo 2. Git
+    echo 3. Notepad++
+    echo 4. Visual Studio Code
+    echo 5. Visual Studio 2022 Community
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install github-desktop -y"
+    if '%choice%'=='2' start powershell -command "choco install git -y"
+    if '%choice%'=='3' start powershell -command "choco install notepadplusplus -y"
+    if '%choice%'=='4' start powershell -command "choco install vscode -y"
+    if '%choice%'=='5' start powershell -command "choco install visualstudio2022community -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:pdf
+    cls
+    echo -------------------------------------
+    echo   + PDF Viewers & Word Processors +
+    echo -------------------------------------
+    echo -
+    echo 1. Adobe Acrobat Reader
+    echo 2. Foxit PDF Reader
+    echo 3. LibreOffice
+    echo 4. Apache OpenOffice
+    echo 5. Sumatra PDF
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install adobereader -y"
+    if '%choice%'=='2' start powershell -command "choco install foxitreader -y"
+    if '%choice%'=='3' start powershell -command "choco install libreoffice-fresh -y"
+    if '%choice%'=='4' start powershell -command "choco install openoffice -y"
+    if '%choice%'=='5' start powershell -command "choco install sumatrapdf -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:games
+    cls
+    echo ----------------------
+    echo   + Game Launchers +
+    echo ----------------------
+    echo -
+    echo 1. ATLauncher (Minecraft)
+    echo 2. Epic Games Launcher
+    echo 3. Nvidia GeForce NOW
+    echo 4. Steam
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' goto atlauncher
+    if '%choice%'=='2' start powershell -command "choco install epicgameslauncher -y"
+    if '%choice%'=='3' start powershell -command "choco install nvidia-geforce-now -y"
+    if '%choice%'=='4' start powershell -command "choco install steam -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:atlauncher
+    cls
+    start powershell -command "(Invoke-WebRequest -Uri 'https://atlauncher.com/download/exe-setup' -OutFile (Join-Path ($env:TEMP) "ATLauncher.exe") -UseBasicParsing).Content"
+    pause
+    cls
+    start powershell -noexit -command "Write-Host 'The ATLauncher installer has been downloaded to' ; $env:TEMP ; Write-Host 'You can open this path in File Explorer, scroll down, and find ATLauncher.EXE' ; Write-Host 'You can now close this window.'"
+    cls
+goto games
+
+:msutilities
+    cls
+    echo ----------------------------
+    echo   + Microsoft Utilities +
+    echo ----------------------------
+    echo -
+    echo 1. Autoruns
+    echo 2. Power Automate
+    echo 3. Sysinternals Process Monitor
+    echo 4. Visual C++ Redistributables 2015-2022 
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install autoruns -y"
+    if '%choice%'=='2' start powershell -command "choco install powerautomatedesktop -y"
+    if '%choice%'=='3' start powershell -command "choco install procmon -y"
+    if '%choice%'=='4' start powershell -command "choco install vcredist140 -y"
+    if '%choice%'=='0' goto apps
+goto apps
+
+:multimedia
+    cls
+    echo ------------------------------
+    echo  Multimedia Programs (Page 1)
+    echo ------------------------------
+    echo -
+    echo 1. Audacity
+    echo 2. EarTrumpet
+    echo 3. Equalizer APO
+    echo 4. GIMP
+    echo 5. HandBrake
+    echo 6. iTunes
+    echo 7. OBS Studio
+    echo 8. Spotify
+    echo 9. PAGE 2 - MORE APPS
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install audacity -y"
+    if '%choice%'=='2' start powershell -command "choco install eartrumpet -y"
+    if '%choice%'=='3' start powershell -command "choco install equalizerapo -y"
+    if '%choice%'=='4' start powershell -command "choco install gimp -y"
+    if '%choice%'=='5' start powershell -command "choco install handbrake -y"
+    if '%choice%'=='6' start powershell -command "choco install itunes -y"
+    if '%choice%'=='7' start powershell -command "choco install obs-studio -y"
+    if '%choice%'=='8' start powershell -command "choco install spotify -y"
+    if '%choice%'=='9' goto multimediapage2
+    if '%choice%'=='0' goto apps
+goto apps
+
+:multimediapage2
+    cls
+    echo ------------------------------
+    echo  Multimedia Programs (Page 2)
+    echo ------------------------------
+    echo -
+    echo 1. VLC Media Player
+    echo 2. Yt-dlp
+    echo 3. Back to PAGE 1
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install vlc -y"
+    if '%choice%'=='2' start powershell -command "choco install yt-dlp -y"
+    if '%choice%'=='3' goto multimedia
+    if '%choice%'=='0' goto apps
+goto apps
+
+:utilities
+    cls
+    echo ----------------------
+    echo   Utilities (Page 1)
+    echo ----------------------
+    echo -
+    echo 1. 7-Zip
+    echo 2. AnyDesk
+    echo 3. Bitwarden
+    echo 4. CrystalDiskMark
+    echo 5. CrystalDiskInfo
+    echo 6. DDU (Display Driver Uninstaller)
+    echo 7. BleachBit
+    echo 8. WizTree
+    echo 9. PAGE 2
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install 7zip -y"
+    if '%choice%'=='2' start powershell -command "choco install anydesk -y"
+    if '%choice%'=='3' start powershell -command "choco install bitwarden -y"
+    if '%choice%'=='4' start powershell -command "choco install crystaldiskmark -y"
+    if '%choice%'=='5' start powershell -command "choco install crystaldiskinfo -y"
+    if '%choice%'=='6' start powershell -command "choco install ddu -y"
+    if '%choice%'=='7' start powershell -command "choco install bleachbit -y"
+    if '%choice%'=='8' start powershell -command "choco install wiztree -y"
+    if '%choice%'=='9' goto utilitiespage2
+    if '%choice%'=='0' goto apps
+goto apps
+
+:utilitiespage2
+    cls
+    echo ----------------------
+    echo   Utilities (Page 2)
+    echo ----------------------
+    echo -
+    echo 1. Rufus
+    echo 2. F.lux
+    echo 3. Google Drive
+    echo 4. CPU-Z
+    echo 5. GPU-Z
+    echo 6. HWMonitor
+    echo 7. Malwarebytes Anti-Malware
+    echo 8. PAGE 1
+    echo 9. PAGE 3
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install rufus -y"
+    if '%choice%'=='2' start powershell -command "choco install f.lux -y"
+    if '%choice%'=='3' start powershell -command "choco install googledrive -y"
+    if '%choice%'=='4' start powershell -command "choco install cpu-z -y"
+    if '%choice%'=='5' start powershell -command "choco install gpu-z -y"
+    if '%choice%'=='6' start powershell -command "choco install hwmonitor -y"
+    if '%choice%'=='7' goto mbam
+    if '%choice%'=='8' goto utilities
+    if '%choice%'=='9' goto utilitiespage3
+    if '%choice%'=='0' goto apps
+goto apps
+
+:mbam
+    cls
+    start powershell -command "(Invoke-WebRequest -Uri 'https://www.malwarebytes.com/mwb-download/thankyou' -OutFile (Join-Path ($env:TEMP) "Malwarebytes.exe") -UseBasicParsing).Content"
+    pause
+    cls
+    start powershell -noexit -command "Write-Host 'The Malwarebytes installer has been downloaded to' ; $env:TEMP ; Write-Host 'You can open this path in File Explorer, scroll down, and find Malwarebytes.EXE' ; Write-Host 'You can now close this window.'"
+    cls
+goto utilitiespage2
+
+:utilitiespage3
+    cls
+    echo ----------------------
+    echo   Utilities (Page 3)
+    echo ----------------------
+    echo -
+    echo 1. MSI Afterburner
+    echo 2. Winfetch (Neofetch for windows)
+    echo 3. OpenRGB
+    echo 4. Oracle VirtualBox
+    echo 5. Parsec
+    echo 6. qBitTorrent
+    echo 7. Revo Uninstaller
+    echo 8. TeamViewer
+    echo 9. PAGE 2
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' start powershell -command "choco install msiafterburner -y"
+    if '%choice%'=='2' start powershell -command "choco install winfetch -y"
+    if '%choice%'=='3' start powershell -command "choco install openrgb -y"
+    if '%choice%'=='4' start powershell -command "choco install virtualbox -y"
+    if '%choice%'=='5' start powershell -command "choco install parsec -y"
+    if '%choice%'=='6' start powershell -command "choco install qbittorrent -y"
+    if '%choice%'=='7' start powershell -command "choco install revo-uninstaller -y"
+    if '%choice%'=='8' start powershell -command "choco install teamviewer -y"
+    if '%choice%'=='9' goto utilitiespage2
+    if '%choice%'=='0' goto apps
+goto apps
 
 pause
 goto start
