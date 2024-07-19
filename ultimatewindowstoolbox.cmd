@@ -131,8 +131,8 @@ goto start
     @echo off
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     echo                                      WARNING!
-    echo            This will perminetly remove Edge and all of its components!
-    echo    You can install another web browser in the apps catagory after edge is removed.
+    echo            This will permanently remove Edge and all of its components!
+    echo    You can install another web browser in the apps category after Edge is removed.
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
         echo Taking ownership of C:\Program Files (x86)\Microsoft...
@@ -579,9 +579,9 @@ goto start
 
 :Credits
  echo ==================================================================================================
- echo                                             Credits
+ echo                                         +++ Credits +++
  echo --------------------------------------------------------------------------------------------------
- echo                        This sscript uses the Chris Titus Tech Winutil
+ echo                        This script uses the Chris Titus Tech Winutil
  echo               Thanks to PowerPCFan and Rage65 for making the rest of the script
  echo ===================================================================================================
  pause
