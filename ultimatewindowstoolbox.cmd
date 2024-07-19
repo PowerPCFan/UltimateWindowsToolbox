@@ -22,9 +22,10 @@ goto check_Permissions
     echo ============================================================================                                    
     echo 1. Run the Chris Titus Tech Winutil
     echo 2. Activate Windows for free
-    echo 3. Test your RAM on next reboot
-    echo 4. Windows Tweaks
-    echo 5. Install Apps (Browsers, Utilities, Etc)
+    echo 3. Find and Repair Problems in Windows
+    echo 4. Test your RAM on next reboot
+    echo 5. Windows Tweaks
+    echo 6. Install Apps (Browsers, Utilities, Etc)
     echo 9. Credits
     echo 0. Exit
     echo ============================================================================
@@ -33,10 +34,11 @@ goto check_Permissions
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto winutil
     if '%choice%'=='2' goto massgrave
-    if '%choice%'=='3' goto ramtestverify
-    if '%choice%'=='4' goto windowstweaks
-    if '%choice%'=='5' goto apps-chocolatey
-    if '%choice%'=='9' goto Credits
+    if '%choice%'=='3' goto repairverify
+    if '%choice%'=='4' goto ramtestverify
+    if '%choice%'=='5' goto windowstweaks
+    if '%choice%'=='6' goto apps-chocolatey
+    if '%choice%'=='9' goto credits
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
@@ -107,8 +109,10 @@ goto start
     echo 2. Enable/Disable Bing Search in start menu searchbar
     echo 3. Enable/Disable Verbose Mode
     echo 4. Enable/Disable Hibernation
-    echo 5. Reset Windows Update
-    echo 6. Find and Repair Problems in Windows 
+    echo 5. Enable/Disable Long Paths
+    echo 6. Reset Windows Update
+    echo 7. Change the alignment of the Taskbar
+    echo 8. Change the behavior of UAC (User Account Control)
     echo 0. Go Home
     echo ============================================================================
     set choice=
@@ -118,9 +122,10 @@ goto start
     if '%choice%'=='2' goto bingsearch
     if '%choice%'=='3' goto verbose
     if '%choice%'=='4' goto hibernate
-    if '%choice%'=='5' goto resetupdateverify
-    if '%choice%'=='6' goto repairverify
-    if '%choice%'=='7' goto 
+    if '%choice%'=='5' goto longpaths
+    if '%choice%'=='6' goto resetupdateverify
+    if '%choice%'=='7' goto taskbaralignment
+    if '%choice%'=='8' goto uac
     if '%choice%'=='0' goto start
     echo "%choice%" is not valid, try again
     echo.
@@ -215,6 +220,29 @@ cls
 pause
 goto windowstweaks
 
+:longpaths
+    cls
+    echo ================================================================================================
+    echo                       +++ Background Info about File Paths in Windows +++
+    echo -
+    echo By default, there is a file path limit of 260 characters in Windows.
+    echo For the average person this isn't a problem but for some people this will cause issues.
+    echo With the settings below, you can enable Long File Paths which bypasses the 260 character limit.
+    echo Even though there is a limit set by default, there isn't a good reason to have it on.
+    echo Therefore I strongly recommend enabling Long File Paths below.
+    echo ================================================================================================
+    echo 1. Enable Long File Paths (Recommended)
+    echo 1. Disable Long File Paths
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "0" /f > nul
+cls
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
 :resetupdateverify
     cls
     echo Your PC will reboot after this! Are you sure you would like to proceed?
@@ -241,6 +269,48 @@ goto windowstweaks
     net start msiserver
     shutdown /r /c "Shutting down in 10 seconds." /t 10
 goto start
+
+:taskbaralignment
+    cls
+    echo =====================
+    echo   Taskbar Alignment
+    echo =====================
+    echo 1. Left Align
+    echo 2. Center Align
+    echo 3. Right Align (only works on Windows 10)
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='2' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='3' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "2" /f > nul
+cls
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:uac
+    cls
+    echo                                 USER ACCOUNT CONTROL SETTINGS
+    echo.
+    echo Choose when to be notified about changes to your computer
+    echo User Account Control helps prevent potentially harmful programs from making changes to your computer.
+    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo 1. Always notify me about any changes made to my computer, even if done by me (most secure)
+    echo 2. Notify me only when apps try to make changes to my computer (Default)
+    echo 3. Notify me only when apps try to make changes to my computer (Don't dim my desktop)
+    echo 4. NEVER notify me about any changes made to my computer (NOT RECOMMENDED)
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "2" /f > nul
+    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
+    if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
+    if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "0" /f > nul
+cls
+echo Process completed successfully. 
+pause
+goto windowstweaks
 
 :apps-chocolatey
     cls
@@ -513,7 +583,7 @@ goto apps
     echo 4. CPU-Z
     echo 5. GPU-Z
     echo 6. HWMonitor
-    echo 7. Malwarebytes Anti-Malware
+    echo 7. Malwarebytes Anti-Malware (Broken AFAIK)
     echo 8. Revo Uninstaller
     echo 9. TeamViewer
     echo -
@@ -577,11 +647,13 @@ goto apps
 pause
 goto start
 
-:Credits
+:credits
+cls
  echo ==================================================================================================
  echo                                         +++ Credits +++
  echo --------------------------------------------------------------------------------------------------
- echo                        This script uses the Chris Titus Tech Winutil
+ echo           This script features the Chris Titus Tech Winutil as Option 1 on the homepage
+ echo       This script uses Microsoft Activation Scripts (massgrave.dev) for Windows Activation
  echo               Thanks to PowerPCFan and Rage65 for making the rest of the script
  echo ===================================================================================================
  pause
