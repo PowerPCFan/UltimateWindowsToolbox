@@ -25,6 +25,7 @@ goto check_Permissions
     echo 3. Test your RAM on next reboot
     echo 4. Windows Tweaks
     echo 5. Install Apps (Browsers, Utilities, Etc)
+    echo 9. Credits
     echo 0. Exit
     echo ============================================================================
     set choice=
@@ -35,6 +36,7 @@ goto check_Permissions
     if '%choice%'=='3' goto ramtestverify
     if '%choice%'=='4' goto windowstweaks
     if '%choice%'=='5' goto apps-chocolatey
+    if '%choice%'=='9' goto Credits
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
@@ -129,8 +131,8 @@ goto start
     @echo off
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     echo                                      WARNING!
-    echo Make sure you have another browser downloaded as this will remove Edge permanently!
-    echo Tip: You can install a browser by going to the homepage of this utility and selecting option 5!
+    echo            This will perminetly remove Edge and all of its components!
+    echo    You can install another web browser in the apps catagory after edge is removed.
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
         echo Taking ownership of C:\Program Files (x86)\Microsoft...
@@ -586,3 +588,13 @@ goto apps
 
 pause
 goto start
+
+:Credits
+ echo ==================================================================================================
+ echo                                             Credits
+ echo --------------------------------------------------------------------------------------------------
+ echo                        This sscript uses the Chris Titus Tech Winutil
+ echo               Thanks to PowerPCFan and Rage65 for making the rest of the script
+ echo ===================================================================================================
+ pause
+ goto start
