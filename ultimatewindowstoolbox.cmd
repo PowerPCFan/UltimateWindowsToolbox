@@ -443,46 +443,27 @@ goto apps
     echo ------------------------------
     echo -
     echo 1. Audacity
-    echo 2. EarTrumpet
-    echo 3. Equalizer APO
-    echo 4. GIMP
-    echo 5. HandBrake
-    echo 6. iTunes
-    echo 7. OBS Studio
-    echo 8. Spotify
-    echo 9. PAGE 2 - MORE APPS
+    echo 2. Equalizer APO
+    echo 3. GIMP
+    echo 4. HandBrake
+    echo 5. iTunes
+    echo 6. OBS Studio
+    echo 7. Spotify
+    echo 8. VLC Media Player
+    echo 9. Yt-dlp
     echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' start powershell -command "choco install audacity -y"
-    if '%choice%'=='2' start powershell -command "choco install eartrumpet -y"
-    if '%choice%'=='3' start powershell -command "choco install equalizerapo -y"
-    if '%choice%'=='4' start powershell -command "choco install gimp -y"
-    if '%choice%'=='5' start powershell -command "choco install handbrake -y"
-    if '%choice%'=='6' start powershell -command "choco install itunes -y"
-    if '%choice%'=='7' start powershell -command "choco install obs-studio -y"
-    if '%choice%'=='8' start powershell -command "choco install spotify -y"
-    if '%choice%'=='9' goto multimediapage2
-    if '%choice%'=='0' goto apps
-goto apps
-
-:multimediapage2
-    cls
-    echo ------------------------------
-    echo  Multimedia Programs (Page 2)
-    echo ------------------------------
-    echo -
-    echo 1. VLC Media Player
-    echo 2. Yt-dlp
-    echo 3. Back to PAGE 1
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install vlc -y"
-    if '%choice%'=='2' start powershell -command "choco install yt-dlp -y"
-    if '%choice%'=='3' goto multimedia
+    if '%choice%'=='2' start powershell -command "choco install equalizerapo -y"
+    if '%choice%'=='3' start powershell -command "choco install gimp -y"
+    if '%choice%'=='4' start powershell -command "choco install handbrake -y"
+    if '%choice%'=='5' start powershell -command "choco install itunes -y"
+    if '%choice%'=='6' start powershell -command "choco install obs-studio -y"
+    if '%choice%'=='7' start powershell -command "choco install spotify -y"
+    if '%choice%'=='8' start powershell -command "choco install vlc -y"
+    if '%choice%'=='9' start powershell -command "choco install yt-dlp -y"
     if '%choice%'=='0' goto apps
 goto apps
 
@@ -500,8 +481,10 @@ goto apps
     echo 6. DDU (Display Driver Uninstaller)
     echo 7. BleachBit
     echo 8. WizTree
-    echo 9. PAGE 2
+    echo 9. qBittorrent
+    echo -
     echo 0. Go Back
+    echo Press 'n' to go to the next page
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -513,8 +496,9 @@ goto apps
     if '%choice%'=='6' start powershell -command "choco install ddu -y"
     if '%choice%'=='7' start powershell -command "choco install bleachbit -y"
     if '%choice%'=='8' start powershell -command "choco install wiztree -y"
-    if '%choice%'=='9' goto utilitiespage2
+    if '%choice%'=='9' start powershell -command "choco install qbittorrent -y"
     if '%choice%'=='0' goto apps
+    if '%choice%'=='n' goto utilitiespage2
 goto apps
 
 :utilitiespage2
@@ -530,9 +514,12 @@ goto apps
     echo 5. GPU-Z
     echo 6. HWMonitor
     echo 7. Malwarebytes Anti-Malware
-    echo 8. PAGE 1
-    echo 9. PAGE 3
+    echo 8. Revo Uninstaller
+    echo 9. TeamViewer
+    echo -
     echo 0. Go Back
+    echo Press 'n' to go to the next page
+    echo Press 'b' to go to the previous page
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -543,9 +530,11 @@ goto apps
     if '%choice%'=='5' start powershell -command "choco install gpu-z -y"
     if '%choice%'=='6' start powershell -command "choco install hwmonitor -y"
     if '%choice%'=='7' goto mbam
-    if '%choice%'=='8' goto utilities
-    if '%choice%'=='9' goto utilitiespage3
+    if '%choice%'=='8' start powershell -command "choco install revo-uninstaller -y"
+    if '%choice%'=='9' start powershell -command "choco install teamviewer -y"
     if '%choice%'=='0' goto apps
+    if '%choice%'=='b' goto utilities
+    if '%choice%'=='n' goto utilitiespage3
 goto apps
 
 :mbam
@@ -570,11 +559,9 @@ goto utilitiespage2
     echo 3. OpenRGB
     echo 4. Oracle VirtualBox
     echo 5. Parsec
-    echo 6. qBitTorrent
-    echo 7. Revo Uninstaller
-    echo 8. TeamViewer
-    echo 9. PAGE 2
+    echo -
     echo 0. Go Back
+    echo Press 'b' to go to the previous page
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -583,11 +570,8 @@ goto utilitiespage2
     if '%choice%'=='3' start powershell -command "choco install openrgb -y"
     if '%choice%'=='4' start powershell -command "choco install virtualbox -y"
     if '%choice%'=='5' start powershell -command "choco install parsec -y"
-    if '%choice%'=='6' start powershell -command "choco install qbittorrent -y"
-    if '%choice%'=='7' start powershell -command "choco install revo-uninstaller -y"
-    if '%choice%'=='8' start powershell -command "choco install teamviewer -y"
-    if '%choice%'=='9' goto utilitiespage2
     if '%choice%'=='0' goto apps
+    if '%choice%'=='b' goto utilitiespage2
 goto apps
 
 pause
