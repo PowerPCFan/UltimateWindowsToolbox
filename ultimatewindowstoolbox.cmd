@@ -409,8 +409,10 @@ goto apps
     start powershell -command "(Invoke-WebRequest -Uri 'https://atlauncher.com/download/exe-setup' -OutFile (Join-Path ($env:TEMP) "ATLauncher.exe") -UseBasicParsing).Content"
     pause
     cls
-    start powershell -noexit -command "Write-Host 'The ATLauncher installer has been downloaded to' ; $env:TEMP ; Write-Host 'You can open this path in File Explorer, scroll down, and find ATLauncher.EXE' ; Write-Host 'You can now close this window.'"
+    echo The ATLauncher installer has been downloaded successfully. Press any key to run the installer. 
+    pause > nul
     cls
+    for /f "tokens=*" %a in ('echo ^%TEMP%') do start "" "%a\ATLauncher.exe"
 goto games
 
 :msutilities
@@ -551,8 +553,10 @@ goto apps
     start powershell -command "(Invoke-WebRequest -Uri 'https://www.malwarebytes.com/mwb-download/thankyou' -OutFile (Join-Path ($env:TEMP) "Malwarebytes.exe") -UseBasicParsing).Content"
     pause
     cls
-    start powershell -noexit -command "Write-Host 'The Malwarebytes installer has been downloaded to' ; $env:TEMP ; Write-Host 'You can open this path in File Explorer, scroll down, and find Malwarebytes.EXE' ; Write-Host 'You can now close this window.'"
+    echo The Malwarebytes installer has been downloaded successfully. Press any key to run the installer. 
+    pause > nul
     cls
+    for /f "tokens=*" %a in ('echo ^%TEMP%') do start "" "%a\Malwarebytes.exe"
 goto utilitiespage2
 
 :utilitiespage3
