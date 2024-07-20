@@ -538,7 +538,7 @@ goto windowstweaks
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto custom-hosts
-    if '%choice%'=='2' goto default-hosts
+    if '%choice%'=='2' goto :default-hosts
     if '%choice%'=='3' goto previous-hosts
     if '%choice%'=='0' goto windowstweaks
 goto windowstweaks
