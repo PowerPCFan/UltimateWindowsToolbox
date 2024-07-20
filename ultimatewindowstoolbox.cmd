@@ -538,7 +538,7 @@ goto windowstweaks
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto customhosts
-    if '%choice%'=='2' goto defaulthosts
+    if '%choice%'=='2' goto stockhosts
     if '%choice%'=='3' goto previoushosts
     if '%choice%'=='0' goto windowstweaks
 goto windowstweaks
@@ -546,7 +546,14 @@ goto windowstweaks
 :customhosts
 cls
 start powershell -command "choco install wget -y"
-echo "Wget installed. Press any key to continue!!"
+echo "Wget installed."
+echo.
+echo.
+echo            \ \
+echo _____________\ \
+echo _____________    ≫  ** PRESS ANY KEY TO CONTINUE **
+echo              / /
+echo            / /
 pause > nul
 rename %windir%\System32\drivers\etc\hosts hosts.bak
 wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/hosts -O %windir%\System32\drivers\etc\hosts
@@ -554,7 +561,7 @@ echo Successfully enabled the custom HOSTS file to block telemetry.
 pause
 goto hosts-telemetry
 
-:defaulthosts
+:stockhosts
 cls
 DEL %windir%\System32\drivers\etc\hosts
 wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/defaulthosts -O %windir%\System32\drivers\etc\
