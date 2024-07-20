@@ -53,7 +53,9 @@ goto start
 
 :massgrave
     cls
-    echo Continuing with this will break Microsoft's TOS. You should pay for a real Windows license. Are you sure you'd like to proceed?
+    echo Continuing with this will break Microsoft's EULA. 
+    echo You should pay for a real Windows license. 
+    echo Are you sure you'd like to proceed?
     pause
     powershell -command "irm https://get.activated.win | iex"
 goto start
@@ -62,15 +64,15 @@ goto start
     cls
     echo -----------------------------------------------------------------------------------
     echo ****You need to REBOOT your PC after running this script.****
-    echo Press 1 to continue and 2 to go back.
+    echo Press 1 to continue and 0 to go back.
     echo -----------------------------------------------------------------------------------
     echo 1. Proceed
-    echo 2. Go back
+    echo 0. Go back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto repairscript
-    if '%choice%'=='2' goto start
+    if '%choice%'=='0' goto start
     echo "%choice%" is not valid, try again
 
 :repairscript
@@ -87,18 +89,13 @@ goto start
     echo Press the button to restart now and check for problems. 
     echo -----------------------------------------------------------------------
     echo 1. YES, Proceed
-    echo 2. NO, Go back
+    echo 0. NO, Go back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto ramtestscript
-    if '%choice%'=='2' goto start
+    if '%choice%'=='1' cmd /k C:\WINDOWS\system32\MdSched.exe
+    if '%choice%'=='0' goto start
     echo "%choice%" is not valid, try again
-
-:ramtestscript
-    cls
-    start powershell -noexit -command "cmd /k C:\WINDOWS\system32\MdSched.exe"
-goto start
 
 :windowstweaks
     cls
@@ -173,6 +170,7 @@ goto start
     echo                                      WARNING!
     echo            This will permanently remove Edge and all of its components!
     echo    You can install another web browser in the apps category after Edge is removed.
+    echo         If you'd like to cancel the Edge uninstallation, close this window.
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
         echo Taking ownership of C:\Program Files (x86)\Microsoft...
@@ -226,6 +224,8 @@ goto windowstweaks
     echo ==================
     echo 1. Enable Verbose Mode
     echo 2. Disable Verbose Mode
+    echo 0. Go Back
+    if '%choice%'=='0' goto windowstweaks
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -247,6 +247,8 @@ cls
     echo ===============================================================================================
     echo 1. Disable Hibernation
     echo 2. Enable Hibernation
+    echo 0. Go Back
+    if '%choice%'=='0' goto windowstweaks
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -267,7 +269,9 @@ goto windowstweaks
     echo Therefore I strongly recommend enabling Long File Paths below.
     echo ================================================================================================
     echo 1. Enable Long File Paths (Recommended)
-    echo 1. Disable Long File Paths
+    echo 2. Disable Long File Paths
+    echo 0. Go Back
+    if '%choice%'=='0' goto windowstweaks
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -283,12 +287,12 @@ goto windowstweaks
     echo Your PC will reboot after this! Are you sure you would like to proceed?
     echo -----------------------------------------------------------------------------------
     echo 1. YES, Proceed
-    echo 2. NO, Go back
+    echo 0. NO, Go back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto resetupdatescript
-    if '%choice%'=='2' goto start
+    if '%choice%'=='0' goto start
     echo "%choice%" is not valid, try again
     
 :resetupdatescript
@@ -313,12 +317,14 @@ goto start
     echo 1. Left Align
     echo 2. Center Align
     echo 3. Right Align (only works on Windows 10)
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "0" /f > nul
     if '%choice%'=='2' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='3' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "2" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 cls
 echo Process completed successfully. 
 pause
@@ -335,6 +341,7 @@ goto windowstweaks
     echo 2. Notify me only when apps try to make changes to my computer (Default)
     echo 3. Notify me only when apps try to make changes to my computer (Don't dim my desktop)
     echo 4. NEVER notify me about any changes made to my computer (NOT RECOMMENDED)
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -342,6 +349,7 @@ goto windowstweaks
     if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
     if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
     if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 cls
 echo Process completed successfully. 
 pause
@@ -363,11 +371,13 @@ goto windowstweaks
     echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo 1. Enable SmartScreen for Windows Security (default)
     echo 2. Disable SmartScreen for Windows Security
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='2' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 cls
 echo Process completed successfully. 
 pause
@@ -391,6 +401,7 @@ goto windowstweaks
     echo.
     echo 1. Enable Windows Error Reporting for ALL USERS (default)
     echo 2. Disable Windows Error Reporting for ALL USERS
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -398,6 +409,7 @@ goto windowstweaks
     if '%choice%'=='2' reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
     if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 cls
 echo Process completed successfully. 
 pause
@@ -414,11 +426,13 @@ goto windowstweaks
     echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     echo 1. Enable Location Services (please don't do this...)
     echo 2. Disable Location Services (Highly Recommended)
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
     if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
 goto windowstweaks
@@ -435,11 +449,13 @@ goto windowstweaks
     echo ============================================================================================
     echo 1. Enable Storage Sense (default)
     echo 2. Disable Storage Sense
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='2' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
 goto windowstweaks
@@ -466,11 +482,13 @@ goto windowstweaks
     echo ================================================================================================================================
     echo 1. Enable Teredo (default)
     echo 2. Disable Teredo
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' netsh interface teredo set state enabled
     if '%choice%'=='2' netsh interface teredo set state disabled
+    if '%choice%'=='0' goto windowstweaks
 
 echo Process completed successfully. 
 pause
@@ -488,40 +506,68 @@ goto windowstweaks
     echo ===============================================================================================
     echo 1. Enable Storage Sense (default)
     echo 2. Disable Storage Sense
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
 goto windowstweaks
 
 :hosts-telemetry
     cls
-    echo =========================================================================================================
-    echo                                        HOSTS file and telemetry
-    echo ---------------------------------------------------------------------------------------------------------
+    echo ====================================================================================================
+    echo                                    HOSTS file and telemetry
+    echo ----------------------------------------------------------------------------------------------------
     echo The HOSTS file has been around for years and it can be used to block websites and connections.
     echo Windows 10 and especially Windows 11 have a ton of telemetry and data that gets sent to Microsoft.
     echo You can use the HOSTS file to block the websites that Microsoft uses to harvest data from you.
-    echo If you experience problems with Microsoft services, use the "Revert to default HOSTS file" option below.
-    echo =========================================================================================================
+    echo.
+    echo If you experience problems with Microsoft services: 
+    echo * Use the "Revert to default HOSTS file" option below
+    echo * Use the "Revert to previous HOSTS file before tweaks" option below
+    echo ====================================================================================================
     echo 1. Enable the custom HOSTS file to block telemetry (Last Updated 7/19/24)
-    echo 2. Revert to default HOSTS file (if you have problems, this should fix them)
+    echo 2. Revert to default HOSTS file
+    echo 3. Revert to previous HOSTS file before tweaks (only works if you've done tweaks previously)
+    echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto custom-hosts
     if '%choice%'=='2' goto default-hosts
-echo Process completed successfully. 
-pause
+    if '%choice%'=='3' goto previous-hosts
+    if '%choice%'=='0' goto windowstweaks
 goto windowstweaks
 
 :custom-hosts
 cls
-start powershell -command "(Invoke-WebRequest -Uri 'https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/hosts/native.winoffice.txt' -OutFile %windir%\System32\drivers\etc\ -UseBasicParsing).Content"
+start powershell -command "choco install wget -y"
+rename %windir%\System32\drivers\etc\hosts hosts.bak
+wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/hosts -O %windir%\System32\drivers\etc\hosts
+echo Successfully enabled the custom HOSTS file to block telemetry.
+pause
+goto hosts-telemetry
+
 :default-hosts
+cls
+DEL %windir%\System32\drivers\etc\hosts
+wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/defaulthosts -O %windir%\System32\drivers\etc\
+copy %windir%\System32\drivers\etc\defaulthosts %windir%\System32\drivers\etc\hosts
+echo Successfully reverted to the default Windows HOSTS file.
+pause
+goto hosts-telemetry
+
+:previous-hosts
+cls
+DEL %windir%\System32\drivers\etc\hosts
+copy %windir%\System32\drivers\etc\hosts.bak %windir%\System32\drivers\etc\hosts
+echo Successfully reverted to previous HOSTS file before tweaks.
+pause
+goto hosts-telemetry
 
 :apps-chocolatey
     cls
