@@ -146,6 +146,7 @@ goto start
     echo 3. Enable/Disable Storage Sense
     echo 4. Enable/Disable Teredo IPv6 Tunneling
     echo 5. Enable/Disable WiFi-Sense
+    echo 6. Configure the HOSTS file to block telemetry in Windows
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -158,6 +159,7 @@ goto start
     if '%choice%'=='3' goto storagesense
     if '%choice%'=='4' goto teredo
     if '%choice%'=='5' goto wifisense
+    if '%choice%'=='6' goto hosts-telemetry
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweaks
     echo "%choice%" is not valid, try again
@@ -494,6 +496,32 @@ goto windowstweaks
 echo Process completed successfully. 
 pause
 goto windowstweaks
+
+:hosts-telemetry
+    cls
+    echo =========================================================================================================
+    echo                                        HOSTS file and telemetry
+    echo ---------------------------------------------------------------------------------------------------------
+    echo The HOSTS file has been around for years and it can be used to block websites and connections.
+    echo Windows 10 and especially Windows 11 have a ton of telemetry and data that gets sent to Microsoft.
+    echo You can use the HOSTS file to block the websites that Microsoft uses to harvest data from you.
+    echo If you experience problems with Microsoft services, use the "Revert to default HOSTS file" option below.
+    echo =========================================================================================================
+    echo 1. Enable the custom HOSTS file to block telemetry (Last Updated 7/19/24)
+    echo 2. Revert to default HOSTS file (if you have problems, this should fix them)
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' goto custom-hosts
+    if '%choice%'=='2' goto default-hosts
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:custom-hosts
+cls
+start powershell -command "(Invoke-WebRequest -Uri 'https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/hosts/native.winoffice.txt' -OutFile %windir%\System32\drivers\etc\ -UseBasicParsing).Content"
+:default-hosts
 
 :apps-chocolatey
     cls
