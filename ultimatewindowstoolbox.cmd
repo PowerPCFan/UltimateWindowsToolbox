@@ -142,6 +142,10 @@ goto start
     echo                      +++ WINDOWS TWEAKS (Page 2) +++
     echo ============================================================================                                    
     echo 1. Enable/Disable Windows Error Reporting
+    echo 2. Enable/Disable Location Services
+    echo 3. Enable/Disable Storage Sense
+    echo 4. Enable/Disable Teredo IPv6 Tunneling
+    echo 5. Enable/Disable WiFi-Sense
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -150,6 +154,10 @@ goto start
     set /p choice=Choose an option and type the corresponding number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto winerrorreporting
+    if '%choice%'=='2' goto locationservices
+    if '%choice%'=='3' goto storagesense
+    if '%choice%'=='4' goto teredo
+    if '%choice%'=='5' goto wifisense
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweaks
     echo "%choice%" is not valid, try again
@@ -389,6 +397,100 @@ goto windowstweaks
     if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
     if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
 cls
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:locationservices
+    cls
+    echo                                    Location Services
+    echo.
+    echo Location Services are tracking your location 24/7. It might seem helpful for maps or weather,
+    echo but it isn't worth it to be constantly giving Microsoft your location. They're just harvesting data. 
+    echo.
+    echo Below, you can enable or disable Location Services. I would HIGHLY recommend disabling it.
+    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    echo 1. Enable Location Services (please don't do this...)
+    echo 2. Disable Location Services (Highly Recommended)
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
+    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:storagesense
+    cls
+    echo ============================================================================================
+    echo                                     Storage Sense
+    echo --------------------------------------------------------------------------------------------
+    echo Storage Sense is a built-in Windows feature that automatically frees up disk space. 
+    echo It can clean temporary files, empty the recycle bin, and even remove old versions of files. 
+    echo This is helpful for keeping your drive from becoming full and improving performance. 
+    echo However, you might want to disable it if you prefer more control over what gets deleted.
+    echo ============================================================================================
+    echo 1. Enable Storage Sense (default)
+    echo 2. Disable Storage Sense
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:teredo
+    cls
+    echo ================================================================================================================================
+    echo                                                  Teredo IPv6 Tunneling
+    echo.
+    echo Teredo is a tunneling protocol that facilitates IPv6 connectivity over IPv4 networks.
+    echo It encapsulates IPv6 packets within IPv4 UDP datagrams, enabling communication between IPv6-only clients and IPv4-based servers.
+    echo.
+    echo.
+    echo Pros and Cons of Enabling Teredo (it's enabled by default):
+    echo.
+    echo Pro: Allows IPv6 connectivity on networks that primarily use IPv4.
+    echo Con: Adds an extra layer of encapsulation/decapsulation, potentially increasing latency.
+    echo.
+    echo.
+    echo Pros and Cons of Disabling Teredo:
+    echo.
+    echo Pro: Streamlines network communication path, potentially improving performance for tasks that don't require IPv6.
+    echo Con: Disables IPv6 connectivity on IPv4-only networks, limiting access to some resources.
+    echo ================================================================================================================================
+    echo 1. Enable Teredo (default)
+    echo 2. Disable Teredo
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' netsh interface teredo set state enabled
+    if '%choice%'=='2' netsh interface teredo set state disabled
+
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:wifisense
+    cls
+    echo ===============================================================================================
+    echo                                        WiFi-Sense
+    echo -----------------------------------------------------------------------------------------------
+    echo Wi-Fi Sense SOUNDS convenient, automatically connecting you to public Wi-Fi. 
+    echo But it's a huge security risk. Connecting to unknown public Wi-Fi can leave your data vulnerable. 
+    echo To add to this, Wi-Fi Sense spies on your geolocation 24/7. 
+    echo Disabling it protects your privacy and gives you control over choosing secure Wi-Fi networks.
+    echo ===============================================================================================
+    echo 1. Enable Storage Sense (default)
+    echo 2. Disable Storage Sense
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
 echo Process completed successfully. 
 pause
 goto windowstweaks
