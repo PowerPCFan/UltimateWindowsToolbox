@@ -564,8 +564,8 @@ goto hosts-telemetry
 :stockhosts
 cls
 DEL %windir%\System32\drivers\etc\hosts
-wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/defaulthosts -O %windir%\System32\drivers\etc\
-ren %windir%\System32\drivers\etc\defaulthosts %windir%\System32\drivers\etc\hosts
+wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/defaulthosts -O %windir%\System32\drivers\etc\hosts
+copy %windir%\System32\drivers\etc\defaulthosts %windir%\System32\drivers\etc\hosts
 echo Successfully reverted to the default Windows HOSTS file.
 pause
 goto hosts-telemetry
