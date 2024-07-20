@@ -546,6 +546,8 @@ goto windowstweaks
 :custom-hosts
 cls
 start powershell -command "choco install wget -y"
+echo "Wget installed. Press any key to continue!!"
+pause > nul
 rename %windir%\System32\drivers\etc\hosts hosts.bak
 wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/hosts -O %windir%\System32\drivers\etc\hosts
 echo Successfully enabled the custom HOSTS file to block telemetry.
