@@ -24,7 +24,7 @@ goto check_Permissions
             cls
             echo Chocolatey was installed successfully. Press any key to continue. 
             pause > nul
-            goto apps
+            goto start
         )
 
 :start
