@@ -4,16 +4,29 @@ color 0f
 goto check_Permissions
 
 :check_Permissions
-   
-
     net session >nul 2>&1
     if %errorLevel% == 0 (
-        goto start 
+        goto choco-check 
     ) else (
         echo Failure: Current permissions inadequate. Please run the file again as administrator.
         pause
         Exit
     )
+
+:choco-check
+    cls
+        if exist "C:\ProgramData\chocolatey\bin\choco.exe" (
+            goto start
+        ) else (
+            echo Chocolatey needs to be installed. Installing...
+            @echo off
+            @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+            cls
+            echo Chocolatey was installed successfully. Press any key to continue. 
+            pause > nul
+            goto apps
+        )
+
 :start
     cls
     title The Ultimate Windows Toolbox
@@ -37,7 +50,7 @@ goto check_Permissions
     if '%choice%'=='3' goto repairverify
     if '%choice%'=='4' goto ramtestverify
     if '%choice%'=='5' goto windowstweaks
-    if '%choice%'=='6' goto apps-chocolatey
+    if '%choice%'=='6' goto apps
     if '%choice%'=='9' goto credits
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
@@ -537,28 +550,29 @@ goto windowstweaks
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto customhosts
+    if '%choice%'=='1' goto customhosts-wget
     if '%choice%'=='2' goto stockhosts
     if '%choice%'=='3' goto previoushosts
     if '%choice%'=='0' goto windowstweaks
 goto windowstweaks
 
+:customhosts-wget
+    cls
+        if exist "C:\ProgramData\chocolatey\bin\wget.exe" (
+            goto customhosts
+        ) else (
+            echo Wget needs to be installed. Installing...
+            start powershell -command "choco install wget -y"
+            pause
+            goto customhosts
+        )
+
 :customhosts
-cls
-start powershell -command "choco install wget -y"
-echo "Wget installed."
-echo.
-echo.
-echo            \ \
-echo _____________\ \
-echo _____________    ≫  ** PRESS ANY KEY TO CONTINUE **
-echo              / /
-echo            / /
-pause > nul
-rename %windir%\System32\drivers\etc\hosts hosts.bak
-wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/hosts -O %windir%\System32\drivers\etc\hosts
-echo Successfully enabled the custom HOSTS file to block telemetry.
-pause
+    cls
+    rename %windir%\System32\drivers\etc\hosts hosts.bak
+    wget https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/hosts -O %windir%\System32\drivers\etc\hosts
+    echo Successfully enabled the custom HOSTS file to block telemetry.
+    pause
 goto hosts-telemetry
 
 :stockhosts
@@ -577,24 +591,6 @@ copy %windir%\System32\drivers\etc\hosts.bak %windir%\System32\drivers\etc\hosts
 echo Successfully reverted to previous HOSTS file before tweaks.
 pause
 goto hosts-telemetry
-
-:apps-chocolatey
-    cls
-        if exist "C:\ProgramData\chocolatey\bin\choco.exe" (
-            goto apps
-        ) else (
-            echo Chocolatey needs to be installed. Installing...
-            @echo off
-            @"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
-            cls
-            echo Chocolatey was installed successfully. Press any key to continue. 
-            pause > nul
-            goto apps
-        )
-    
-    
-    cls
-    goto apps
 
 :apps
     cls
