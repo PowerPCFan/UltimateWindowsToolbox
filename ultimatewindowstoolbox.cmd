@@ -609,8 +609,8 @@ goto hosts-telemetry
     set choice=
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\RealTimeIsUniversal" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\RealTimeIsUniversal" /f > nul
+    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
     if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
