@@ -157,6 +157,7 @@ goto start
     echo 4. Enable/Disable Teredo IPv6 Tunneling
     echo 5. Enable/Disable WiFi-Sense
     echo 6. Configure the HOSTS file to block telemetry in Windows
+    echo 7. Make Windows use UTC Time
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -170,6 +171,7 @@ goto start
     if '%choice%'=='4' goto teredo
     if '%choice%'=='5' goto wifisense
     if '%choice%'=='6' goto hosts-telemetry
+    if '%choice%'=='7' goto utc-time
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweaks
     echo "%choice%" is not valid, try again
@@ -591,6 +593,28 @@ copy %windir%\System32\drivers\etc\hosts.bak %windir%\System32\drivers\etc\hosts
 echo Successfully reverted to previous HOSTS file before tweaks.
 pause
 goto hosts-telemetry
+
+:utc-time
+    cls
+    echo ===============================================================
+    echo                           UTC Time
+    echo ---------------------------------------------------------------
+    echo By default, Windows uses Local Time and Linux uses UTC Time.
+    echo If you're dual-booting, there will be time errors and problems.
+    echo You can fix this by forcing Windows to use UTC Time.
+    echo ===============================================================
+    echo 1. Enable UTC Time
+    echo 2. Disable UTC Time (default)
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\RealTimeIsUniversal" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation\RealTimeIsUniversal" /f > nul
+    if '%choice%'=='0' goto windowstweaks
+echo Process completed successfully. 
+pause
+goto windowstweaks
 
 :apps
     cls
