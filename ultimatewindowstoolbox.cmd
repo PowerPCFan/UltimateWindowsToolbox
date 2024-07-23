@@ -158,6 +158,7 @@ goto start
     echo 5. Enable/Disable WiFi-Sense
     echo 6. Configure the HOSTS file to block telemetry in Windows
     echo 7. Make Windows use UTC Time
+    echo 8. Disable/Enable Windows Copilot
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -172,6 +173,7 @@ goto start
     if '%choice%'=='5' goto wifisense
     if '%choice%'=='6' goto hosts-telemetry
     if '%choice%'=='7' goto utc-time
+    if '%choice%'=='8' goto copilot
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweaks
     echo "%choice%" is not valid, try again
@@ -611,6 +613,28 @@ goto hosts-telemetry
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='2' reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
+    if '%choice%'=='0' goto windowstweaks
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:copilot
+    cls
+    echo ======================================================================
+    echo                            Windows Copilot
+    echo ----------------------------------------------------------------------
+    echo Some Windows users like me find Copilot to be annoying and intrusive.
+    echo You can disable or enable copilot with the options below.
+    echo You may need to restart your computer for changes to take effect.
+    echo ======================================================================
+    echo 1. Enable Copilot (default setting)
+    echo 2. Disable Copilot
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
+    if '%choice%'=='2' reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
     if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
