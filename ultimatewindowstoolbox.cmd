@@ -170,7 +170,7 @@ goto start
     if '%choice%'=='2' goto locationservices
     if '%choice%'=='3' goto storagesense
     if '%choice%'=='4' goto teredo
-    if '%choice%'=='5' goto wifisense
+    if '%choice%'=='5' goto wifi-sense
     if '%choice%'=='6' goto hosts-telemetry
     if '%choice%'=='7' goto utc-time
     if '%choice%'=='8' goto copilot
@@ -511,7 +511,7 @@ echo Process completed successfully.
 pause
 goto windowstweaks
 
-:wifisense
+:wifi-sense
     cls
     echo ===============================================================================================
     echo                                        WiFi-Sense
@@ -521,8 +521,8 @@ goto windowstweaks
     echo To add to this, Wi-Fi Sense spies on your geolocation 24/7. 
     echo Disabling it protects your privacy and gives you control over choosing secure Wi-Fi networks.
     echo ===============================================================================================
-    echo 1. Enable Storage Sense (default)
-    echo 2. Disable Storage Sense
+    echo 1. Enable WiFi-Sense (default)
+    echo 2. Disable WiFi-Sense
     echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
