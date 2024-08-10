@@ -162,6 +162,7 @@ goto start
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
+    echo Press 'n' to go to the next page
     echo ============================================================================
     set choice=
     set /p choice=Choose an option and type the corresponding number. 
@@ -176,6 +177,27 @@ goto start
     if '%choice%'=='8' goto copilot
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweaks
+    if '%choice%'=='n' goto windowstweakspage3
+    echo "%choice%" is not valid, try again
+    echo.
+goto start
+
+:windowstweakspage3
+    cls
+    echo ============================================================================
+    echo                      +++ WINDOWS TWEAKS (Page 3) +++
+    echo ============================================================================                                    
+    echo 1. Configure Google Chrome Manifest V2 support
+    echo.
+    echo 0. Go Back
+    echo Press 'b' to go to the previous page
+    echo ============================================================================
+    set choice=
+    set /p choice=Choose an option and type the corresponding number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' goto chrome-mv2
+    if '%choice%'=='0' goto start
+    if '%choice%'=='b' goto windowstweakspage2
     echo "%choice%" is not valid, try again
     echo.
 goto start
@@ -634,7 +656,25 @@ goto windowstweaks
     set /p choice=Type the number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
-    if '%choice%'=='2' reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='2' reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
+    if '%choice%'=='0' goto windowstweaks
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:chrome-mv2
+    cls
+    echo ======================================================================
+    echo        Extend Google Chrome Manifest V2 support to June 2025
+    echo ======================================================================
+    echo 1. Enabled
+    echo 2. Disabled (default)
+    echo 0. Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /t REG_DWORD /d "2" /f > nul
+    if '%choice%'=='2' reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /f > nul
     if '%choice%'=='0' goto windowstweaks
 echo Process completed successfully. 
 pause
