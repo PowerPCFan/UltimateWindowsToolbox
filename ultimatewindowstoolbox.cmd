@@ -39,6 +39,7 @@ goto check_Permissions
     echo 4. Test your RAM on next reboot
     echo 5. Windows Tweaks
     echo 6. Install Apps (Browsers, Utilities, Etc)
+    echo 7. All-in-one Windows Tweak Script - run after clean install 
     echo 9. Credits
     echo 0. Exit
     echo ============================================================================
@@ -51,6 +52,7 @@ goto check_Permissions
     if '%choice%'=='4' goto ramtestverify
     if '%choice%'=='5' goto windowstweaks
     if '%choice%'=='6' goto apps
+    if '%choice%'=='7' goto tweak-script
     if '%choice%'=='9' goto credits
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
@@ -438,8 +440,8 @@ goto windowstweaks
     echo 1. Enable Windows Error Reporting for the current user (default)
     echo 2. Disable Windows Error Reporting for the current user
     echo.
-    echo 1. Enable Windows Error Reporting for ALL USERS (default)
-    echo 2. Disable Windows Error Reporting for ALL USERS
+    echo 3. Enable Windows Error Reporting for ALL USERS (default)
+    echo 4. Disable Windows Error Reporting for ALL USERS
     echo 0. Go Back
     set choice=
     set /p choice=Type the number. 
@@ -996,6 +998,39 @@ goto apps
 
 pause
 goto start
+
+:tweak-script
+    cls 
+    echo This will apply a lot of tweaks. Are you sure you'd like to continue?
+    pause
+
+    echo Setting taskbar alignment to Left...
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "0" /f > nul
+    
+    echo Disabling Search Box Suggestions in start menu...
+    reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "1" /f > nul
+
+    echo Disabling Windows Copilot...
+    reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
+
+    echo Disabling WiFi-Sense...
+    reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
+
+    echo Disabling Location Services...
+    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
+
+    echo Disabling Windows Error Reporting...
+    reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+
+    echo Enabling Long File Paths...
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "1" /f > nul
+
+    echo Enabling Verbose Mode...
+    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f > nul
+
+    echo More will be added to this script soon... check back later!!
+    pause
+    goto start 
 
 :credits
 cls
