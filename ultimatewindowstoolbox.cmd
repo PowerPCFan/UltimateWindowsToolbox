@@ -190,6 +190,8 @@ goto start
     echo                      +++ WINDOWS TWEAKS (Page 3) +++
     echo ============================================================================                                    
     echo 1. Configure Google Chrome Manifest V2 support
+    echo 2. Enable Dark Mode
+    echo 3. Disable Cortana
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -198,6 +200,8 @@ goto start
     set /p choice=Choose an option and type the corresponding number. 
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto chrome-mv2
+    if '%choice%'=='2' goto darkmode
+    if '%choice%'=='3' goto cortana
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweakspage2
     echo "%choice%" is not valid, try again
@@ -682,6 +686,40 @@ echo Process completed successfully.
 pause
 goto windowstweaks
 
+:darkmode
+    cls
+    echo ==============================
+    echo        Enable Dark Mode
+    echo ==============================
+    echo 1. Yes, Enable Dark Mode
+    echo 2. No, Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v ColorPrevalence /t REG_DWORD /d 0 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 1 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f > nul
+    if '%choice%'=='2' goto windowstweaks
+echo Process completed successfully. 
+pause
+goto windowstweaks
+
+:cortana
+    cls
+    echo ==========================
+    echo      Disable Cortana
+    echo ==========================
+    echo 1. Yes, Disable Cortana
+    echo 2. No, Go Back
+    set choice=
+    set /p choice=Type the number. 
+    if not '%choice%'=='' set choice=%choice:~0,100%
+    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f > nul
+    if '%choice%'=='2' goto windowstweaks
+echo Process completed successfully.
+pause
+goto windowstweaks
+
+
+
 :apps
     cls
     echo ==========================
@@ -1028,7 +1066,108 @@ goto start
     echo Enabling Verbose Mode...
     reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f > nul
 
-    echo More will be added to this script soon... check back later!!
+    echo Enabling Dark Mode...
+    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f > nul
+    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v ColorPrevalence /t REG_DWORD /d 0 /f > nul
+    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 1 /f > nul
+    reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f > nul
+
+    echo Disabling Sticky Keys...
+    reg add "HKCU\Control Panel\Accessibility\StickyKeys" /v "Flags" /t REG_SZ /d "0" /f
+
+    echo Disabling Toggle Keys...
+    reg add "HKCU\Control Panel\Accessibility\ToggleKeys" /v "Flags" /t REG_SZ /d "0" /f
+
+    echo Disabling Cortana...
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f > nul
+
+    echo Uninstalling Apps:
+    
+        echo Uninstalling OneNote
+        powershell -command "Get-AppxPackage Microsoft.Office.OneNote* | Remove-AppxPackage"
+
+        echo Uninstalling Windows Mail and Calendar
+        powershell -command "Get-AppxPackage *windowscommunicationsapps* | Remove-AppxPackage"
+        
+        echo Uninstalling Cortana
+        powershell -command "Get-AppxPackage Microsoft.549981C3F5F10 | Remove-AppxPackage"
+        
+        echo Uninstalling Music
+        powershell -command "Get-AppxPackage Microsoft.ZuneMusic* | Remove-AppxPackage"
+        
+        echo Uninstalling Microsoft To-Do
+        powershell -command "Get-AppxPackage Microsoft.ToDo* | Remove-AppxPackage"
+        
+        echo Uninstalling Word
+        powershell -command "Get-AppxPackage Microsoft.Office.Word* | Remove-AppxPackage"
+        
+        echo Uninstalling Excel
+        powershell -command "Get-AppxPackage Microsoft.Office.Excel* | Remove-AppxPackage"
+        
+        echo Uninstalling PowerPoint
+        powershell -command "Get-AppxPackage Microsoft.Office.PowerPoint* | Remove-AppxPackage"
+        
+        echo Uninstalling Outlook
+        powershell -command "Get-AppxPackage Microsoft.Office.Outlook* | Remove-AppxPackage"
+        
+        echo Uninstalling Mixed Reality Portal
+        powershell -command "Get-AppxPackage Microsoft.MixedReality.Portal* | Remove-AppxPackage"
+        
+        echo Uninstalling Microsoft News
+        powershell -command "Get-AppxPackage Microsoft.MicrosoftNews* | Remove-AppxPackage"
+        
+        echo Uninstalling Office
+        powershell -command "Get-AppxPackage Microsoft.Office.* | Remove-AppxPackage"
+        
+        echo Uninstalling Your Phone
+        powershell -command "Get-AppxPackage Microsoft.YourPhone* | Remove-AppxPackage"
+        
+        echo Uninstalling Print to PDF
+        powershell -command "Get-AppxPackage Microsoft.MicrosoftPrinttoPDF* | Remove-AppxPackage"
+        
+        echo Uninstalling SkyDrive
+        powershell -command "Get-AppxPackage Microsoft.SkyDrive* | Remove-AppxPackage"
+        
+        echo Uninstalling Clipchamp
+        powershell -command "Get-AppxPackage Clipchamp.Clipchamp* | Remove-AppxPackage"
+        
+        echo Uninstalling Maps
+        powershell -command "Get-AppxPackage Microsoft.WindowsMaps* | Remove-AppxPackage"
+        
+        echo Uninstalling Office Hub
+        powershell -command "Get-AppxPackage Microsoft.MicrosoftOfficeHub* | Remove-AppxPackage"
+        
+        echo Uninstalling Microsoft Teams
+        powershell -command "Get-AppxPackage MSTeams* | Remove-AppxPackage"
+        
+        echo Uninstalling Outlook for Windows
+        powershell -command "Get-AppxPackage Microsoft.OutlookForWindows* | Remove-AppxPackage"
+        
+        echo Uninstalling Get Started
+        powershell -command "Get-AppxPackage Microsoft.Getstarted* | Remove-AppxPackage"
+
+    echo Disabling Telemetry...
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f > nul
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "DoNotShowFeedbackNotifications" /t REG_DWORD /d "0" /f > nul
+    reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338387Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338388Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353698Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338393Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353694Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353696Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-310093Enabled" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-314563Enabled" /t REG_DWORD /d "0" /f > nul
+
+    echo Disabling Advertising ID...
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AdvertisingInfo" /v "DisabledByGroupPolicy" /t REG_DWORD /d "1" /f > nul
+
+    echo Hiding Cortana and Task View Buttons...
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowCortanaButton" /t REG_DWORD /d "0" /f > nul
+    reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d "0" /f > nul
+
+    echo More will be added to this script soon... check back later!
     pause
     goto start 
 
