@@ -575,7 +575,7 @@ goto windowstweaks
     echo * Use the "Revert to default HOSTS file" option below
     echo * Use the "Revert to previous HOSTS file before tweaks" option below
     echo ====================================================================================================
-    echo 1. Enable the custom HOSTS file to block telemetry (Last Updated 7/19/24)
+    echo 1. Enable the custom HOSTS file to block telemetry (Last Updated September 5, 2024)
     echo 2. Revert to default HOSTS file
     echo 3. Revert to previous HOSTS file before tweaks (only works if you've done tweaks previously)
     echo 0. Go Back
