@@ -1,17 +1,25 @@
 @echo off
+title The Ultimate Windows Toolbox
 cls
+set w=[97m
+set p=[95m
+set b=[96m
+chcp 65001 >nul 2>&1
 color 0f
-goto check_Permissions
+:: Enable ANSI Escape Sequences
+Reg.exe add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
 
-:check_Permissions
-    net session >nul 2>&1
-    if %errorLevel% == 0 (
-        goto choco-check 
-    ) else (
-        echo Failure: Current permissions inadequate. Please run the file again as administrator.
-        pause
-        Exit
-    )
+::Enable Delayed Expansion
+setlocal EnableDelayedExpansion > nul
+
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    goto choco-check 
+) else (
+    echo Failure: Current permissions inadequate. Please run the file again as administrator.
+    pause
+    Exit
+)
 
 :choco-check
     cls
@@ -29,22 +37,33 @@ goto check_Permissions
 
 :start
     cls
-    title The Ultimate Windows Toolbox
-    echo ============================================================================
-    echo "The Ultimate Windows Toolbox - Works in Windows 10 and Windows 11"
-    echo ============================================================================                                    
-    echo 1. Run the Chris Titus Tech Winutil
-    echo 2. Activate Windows for free
-    echo 3. Find and Repair Problems in Windows
-    echo 4. Test your RAM on next reboot
-    echo 5. Windows Tweaks
-    echo 6. Install Apps (Browsers, Utilities, Etc)
-    echo 7. All-in-one Windows Tweak Script - run after clean install 
-    echo 9. Credits
-    echo 0. Exit
-    echo ============================================================================
+    echo.
+    echo.                       %p%░██╗░░░░░░░██╗███████╗██╗░░░░░░█████╗░░█████╗░███╗░░░███╗███████╗░
+    echo.                       %p%░██║░░██╗░░██║██╔════╝██║░░░░░██╔══██╗██╔══██╗████╗░████║██╔════╝░
+    echo.                       %p%░╚██╗████╗██╔╝█████╗░░██║░░░░░██║░░╚═╝██║░░██║██╔████╔██║█████╗░░░
+    echo.                       %p%░░████╔═████║░██╔══╝░░██║░░░░░██║░░██╗██║░░██║██║╚██╔╝██║██╔══╝░░░
+    echo.                       %p%░░╚██╔╝░╚██╔╝░███████╗███████╗╚█████╔╝╚█████╔╝██║░╚═╝░██║███████╗░
+    echo.                       %p%░░░╚═╝░░░╚═╝░░╚══════╝╚══════╝░╚════╝░░╚════╝░╚═╝░░░░░╚═╝╚══════╝░
+    echo. %b%================================================================================================================
+    echo. %w%             The Ultimate Windows Toolbox is the ULTIMATE Windows 10 and Windows 11 tweaking utility!
+    echo. %b%================================================================================================================               
+    echo         %p%[%w%1%p%]%w% Run the Chris Titus Tech Winutil          %p%[%w%2%p%]%w% Activate Windows for free
+    echo.
+    echo         %p%[%w%3%p%]%w% Find and Repair Problems in Windows       %p%[%w%4%p%]%w% Test your RAM on next reboot
+    echo.
+    echo         %p%[%w%5%p%]%w% Windows Tweaks                            %p%[%w%6%p%]%w% Install Apps (Browsers, Utilities, Etc)
+    echo.
+    echo         %p%[%w%7%p%]%w% All-in-one Windows Tweak Script
+    echo.
+    echo. 
+    echo         %p%[%w%9%p%]%w% Credits
+    echo.
+    echo         %p%[%w%0%p%]%w% Exit
+    echo. %b%================================================================================================================
+    echo.
+    echo %w%Choose an option and type the corresponding number.
     set choice=
-    set /p choice=Choose an option and type the corresponding number. 
+    set /p choice= »
     if not '%choice%'=='' set choice=%choice:~0,100%
     if '%choice%'=='1' goto winutil
     if '%choice%'=='2' goto massgrave
@@ -192,6 +211,7 @@ goto start
     echo 1. Configure Google Chrome Manifest V2 support
     echo 2. Enable Dark Mode
     echo 3. Disable Cortana
+    echo 4. Lower Keyboard + Mouse Data Queue to reduce input lag
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
@@ -202,6 +222,7 @@ goto start
     if '%choice%'=='1' goto chrome-mv2
     if '%choice%'=='2' goto darkmode
     if '%choice%'=='3' goto cortana
+    if '%choice%'=='4' reg add "HKLM\SYSTEM\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d "30" /f & reg add "HKLM\SYSTEM\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d "35" /f
     if '%choice%'=='0' goto start
     if '%choice%'=='b' goto windowstweakspage2
     echo "%choice%" is not valid, try again
