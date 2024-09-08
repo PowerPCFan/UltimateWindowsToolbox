@@ -4,7 +4,6 @@ cls
 set w=[97m
 set p=[95m
 set b=[96m
-chcp 65001 >nul 2>&1
 color 0f
 :: Enable ANSI Escape Sequences
 Reg.exe add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
@@ -37,6 +36,7 @@ if %errorLevel% == 0 (
 
 :start
     cls
+    chcp 65001 >nul 2>&1
     echo.
     echo.                       %p%░██╗░░░░░░░██╗███████╗██╗░░░░░░█████╗░░█████╗░███╗░░░███╗███████╗░
     echo.                       %p%░██║░░██╗░░██║██╔════╝██║░░░░░██╔══██╗██╔══██╗████╗░████║██╔════╝░
