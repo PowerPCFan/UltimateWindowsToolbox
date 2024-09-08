@@ -40,7 +40,6 @@ if %errorLevel% == 0 (
     	echo. %p%
     	type "%temp%\welcome.txt"
 	echo.
-	chcp 437 >nul 2>&1
     echo. %b%================================================================================================================
     echo. %w%             The Ultimate Windows Toolbox is the ULTIMATE Windows 10 and Windows 11 tweaking utility!
     echo. %b%================================================================================================================               
@@ -59,7 +58,6 @@ if %errorLevel% == 0 (
     echo. %b%================================================================================================================
     echo.
     echo %w%Choose an option and type the corresponding number.
-chcp 65001 >nul 2>&1
     set choice=
     set /p choice= »
     if not '%choice%'=='' set choice=%choice:~0,100%
@@ -74,7 +72,6 @@ chcp 65001 >nul 2>&1
     if '%choice%'=='0' Exit
     echo "%choice%" is not valid, try again
     echo.
-chcp 437 >nul 2>&1
 goto start
 
 :winutil
