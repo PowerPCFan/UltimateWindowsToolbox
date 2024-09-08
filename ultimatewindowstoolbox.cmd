@@ -35,11 +35,12 @@ if %errorLevel% == 0 (
         )
 
 :start
-    chcp 65001 >nul 2>&1
-    cls
-    echo. %p%
-    type "%temp%\welcome.txt"
+	cls
+	chcp 65001 >nul 2>&1
+    	echo. %p%
+    	type "%temp%\welcome.txt"
 	echo.
+	chcp 437 >nul 2>&1
     echo. %b%================================================================================================================
     echo. %w%             The Ultimate Windows Toolbox is the ULTIMATE Windows 10 and Windows 11 tweaking utility!
     echo. %b%================================================================================================================               
