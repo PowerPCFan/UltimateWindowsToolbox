@@ -4,10 +4,10 @@
 # License: https://github.com/hagezi/dns-blocklists/blob/main/LICENSE
 # Issues: https://github.com/hagezi/dns-blocklists/issues
 # Expires: 7 days
-# Last modified: 19 Jul 2024 05:29 UTC
-# Version: 2024.0719.0529.18
+# Last modified: 05 Sep 2024 02:07 UTC
+# Version: 2024.0905.0207.56
 # Syntax: Hosts (including possible subdomains)
-# Number of entries: 694
+# Number of entries: 693
 #
 0.0.0.0 in.appcenter.ms
 0.0.0.0 applicationinsights.azure.com
@@ -101,6 +101,7 @@
 0.0.0.0 westus2-4.in.applicationinsights.azure.com
 0.0.0.0 westus2-5.in.applicationinsights.azure.com
 0.0.0.0 westus2-global.in.applicationinsights.azure.com
+0.0.0.0 westus3.in.applicationinsights.azure.com
 0.0.0.0 westus3-1.in.applicationinsights.azure.com
 0.0.0.0 live.applicationinsights.azure.cn
 0.0.0.0 live.applicationinsights.azure.com
@@ -163,6 +164,7 @@
 0.0.0.0 ffc-word-telemetry.officeapps.live.com
 0.0.0.0 frc-visio-telemetry.officeapps.live.com
 0.0.0.0 inc-visio-telemetry.officeapps.live.com
+0.0.0.0 jpc-visio-telemetry.officeapps.live.com
 0.0.0.0 nexus.officeapps.live.com
 0.0.0.0 nexusrules.officeapps.live.com
 0.0.0.0 noc-visio-telemetry.officeapps.live.com
@@ -245,7 +247,6 @@
 0.0.0.0 help.ads-int.microsoft.com
 0.0.0.0 ui.ads-int.microsoft.com
 0.0.0.0 adsdk.microsoft.com
-0.0.0.0 adsinapps.microsoft.com
 0.0.0.0 adsstatic.microsoft.com
 0.0.0.0 beta.adsstatic.microsoft.com
 0.0.0.0 adsstatic-int.microsoft.com
@@ -442,15 +443,11 @@
 0.0.0.0 ads2.msads.net
 0.0.0.0 a.ads2.msads.net
 0.0.0.0 b.ads2.msads.net
-0.0.0.0 global.msads.net
-0.0.0.0 a.global.msads.net
 0.0.0.0 www.msads.net
 0.0.0.0 ad.msn.com
 0.0.0.0 adevents.msn.com
 0.0.0.0 ads.msn.com
 0.0.0.0 ads1.msn.com
-0.0.0.0 a.ads1.msn.com
-0.0.0.0 b.ads1.msn.com
 0.0.0.0 ads2.msn.com
 0.0.0.0 adsyndication.msn.com
 0.0.0.0 images.adsyndication.msn.com
@@ -458,6 +455,7 @@
 0.0.0.0 analytics.msn.com
 0.0.0.0 metric.appex-rf.msn.com
 0.0.0.0 c.ar.msn.com
+0.0.0.0 arc.msn.com
 0.0.0.0 c.at.msn.com
 0.0.0.0 c.be.msn.com
 0.0.0.0 c.br.msn.com
@@ -515,7 +513,6 @@
 0.0.0.0 c.ru.msn.com
 0.0.0.0 sam.msn.com
 0.0.0.0 c.se.msn.com
-0.0.0.0 auto.search.msn.com
 0.0.0.0 c.sg.msn.com
 0.0.0.0 srtb.msn.com
 0.0.0.0 stjjp.msn.com
@@ -532,6 +529,7 @@
 0.0.0.0 measure.office.com
 0.0.0.0 measure.office.net
 0.0.0.0 fp.measure.office.com
+0.0.0.0 4e83215548583efc70931bb7da7ddd61.fp.measure.office.com
 0.0.0.0 66ed06ba24d0447d99be625dc7a80b00.fp.measure.office.com
 0.0.0.0 ce2617d2a3a1a6b03e6b908e5fde808f.fp.measure.office.com
 0.0.0.0 config.fp.measure.office.com
@@ -676,6 +674,7 @@
 0.0.0.0 analyticsiot-prod-simpad-ehn.servicebus.windows.net
 0.0.0.0 btv-du-dev-eventhub-streamanalytics.servicebus.windows.net
 0.0.0.0 btv-du-prod-eventhub-streamanalytics.servicebus.windows.net
+0.0.0.0 chem4wordtelemetry.servicebus.windows.net
 0.0.0.0 citrixanalyticseh.servicebus.windows.net
 0.0.0.0 citrixanalyticseh-alias.servicebus.windows.net
 0.0.0.0 citrixanalyticseh2.servicebus.windows.net
