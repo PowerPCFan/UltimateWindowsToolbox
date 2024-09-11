@@ -1,7 +1,7 @@
 $temp = $env:Temp
 
-rmdir "$temp\UltimateWindowsToolbox"
-mkdir "$temp\UltimateWindowsToolbox"
+rmdir "%temp%\UltimateWindowsToolbox"
+mkdir "%temp%\UltimateWindowsToolbox"
 
 Remove-Item "$temp\UltimateWindowsToolbox\ultimatewindowstoolbox.cmd"
 Remove-Item "$temp\UltimateWindowsToolbox\welcome.txt"
