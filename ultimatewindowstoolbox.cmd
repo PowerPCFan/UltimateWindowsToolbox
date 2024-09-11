@@ -1,10 +1,12 @@
 @echo off
 title The Ultimate Windows Toolbox
 cls
-set w=[97m
-set p=[95m
-set b=[96m
+set white=[97m
+set pink=[95m
+set blue=[96m
 color 0f
+mode 175,40
+
 :: Enable ANSI Escape Sequences
 Reg.exe add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
 
@@ -37,41 +39,53 @@ if %errorLevel% == 0 (
 :start
 	cls
 	chcp 65001 >nul 2>&1
-    	echo. %p%
-    	type "%temp%\welcome.txt"
+    	echo. %pink%
+    	type "%temp%\UltimateWindowsToolbox\welcome.txt"
 	echo.
-    echo. %b%================================================================================================================
-    echo. %w%             The Ultimate Windows Toolbox is the ULTIMATE Windows 10 and Windows 11 tweaking utility!
-    echo. %b%================================================================================================================               
-    echo         %p%[%w%1%p%]%w% Run the Chris Titus Tech Winutil          %p%[%w%2%p%]%w% Activate Windows for free
+    echo                             %blue%===================================================================================================================
+    echo                             %white%              The Ultimate Windows Toolbox is the ULTIMATE Windows 10 and Windows 11 tweaking utility!
+    echo                             %blue%===================================================================================================================               
+    echo                                     %pink%[%white%1%pink%]%white% Run the Chris Titus Tech Winutil          %pink%[%white%2%pink%]%white% Activate Windows for free
     echo.
-    echo         %p%[%w%3%p%]%w% Find and Repair Problems in Windows       %p%[%w%4%p%]%w% Test your RAM on next reboot
+    echo                                     %pink%[%white%3%pink%]%white% Find and Repair Problems in Windows       %pink%[%white%4%pink%]%white% Test your RAM on next reboot
     echo.
-    echo         %p%[%w%5%p%]%w% Windows Tweaks                            %p%[%w%6%p%]%w% Install Apps (Browsers, Utilities, Etc)
+    echo                                     %pink%[%white%5%pink%]%white% Windows Tweaks                            %pink%[%white%6%pink%]%white% Install Apps (Browsers, Utilities, Etc)
     echo.
-    echo         %p%[%w%7%p%]%w% All-in-one Windows Tweak Script
+    echo                                     %pink%[%white%7%pink%]%white% All-in-one Windows Tweak Script
     echo.
     echo. 
-    echo         %p%[%w%9%p%]%w% Credits
+    echo                                     %pink%[%white%C%pink%]%white% Credits
     echo.
-    echo         %p%[%w%0%p%]%w% Exit
-    echo. %b%================================================================================================================
-    echo.
-    echo %w%Choose an option and type the corresponding number.
-    set choice=
-    set /p choice= »
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto winutil
-    if '%choice%'=='2' goto massgrave
-    if '%choice%'=='3' goto repairverify
-    if '%choice%'=='4' goto ramtestverify
-    if '%choice%'=='5' goto windowstweaks
-    if '%choice%'=='6' goto apps
-    if '%choice%'=='7' goto tweak-script
-    if '%choice%'=='9' goto credits
-    if '%choice%'=='0' Exit
-    echo "%choice%" is not valid, try again
-    echo.
+    echo                                     %pink%[%white%E%pink%]%white% Exit
+    echo                             %blue%================================================================================================================
+    echo. %white%
+    choice /c 1234567ce /n /m "» "
+    if errorlevel 9 exit
+    if errorlevel 8 goto credits
+    if errorlevel 7 goto tweak-script
+    if errorlevel 6 goto apps
+    if errorlevel 5 goto windowstweaks
+    if errorlevel 4 goto ramtestverify
+    if errorlevel 3 goto repairverify
+    if errorlevel 2 goto massgrave
+    if errorlevel 1 goto winutil
+
+    :: OLD CODE ::
+    :: set choice=
+    :: set /p choice= »
+    :: if not '%choice%'=='' set choice=%choice:~0,100%
+    :: if '%choice%'=='1' goto winutil
+    :: if '%choice%'=='2' goto massgrave
+    :: if '%choice%'=='3' goto repairverify
+    :: if '%choice%'=='4' goto ramtestverify
+    :: if '%choice%'=='5' goto windowstweaks
+    :: if '%choice%'=='6' goto apps
+    :: if '%choice%'=='7' goto tweak-script
+    :: if '%choice%'=='c' goto credits
+    :: if '%choice%'=='e' Exit
+    :: echo "%choice%" is not valid, try again
+    :: echo.
+
 goto start
 
 :winutil
@@ -83,9 +97,11 @@ goto start
 
 :massgrave
     cls
-    echo Continuing with this will break Microsoft's EULA. 
-    echo You should pay for a real Windows license. 
-    echo Are you sure you'd like to proceed?
+    echo %blue%======================================================
+    echo   %white%Continuing with this will break Microsoft's EULA. 
+    echo       %white%You should pay for a real Windows license. 
+    echo          %white%Are you sure you'd like to proceed?
+    echo %blue%======================================================
     pause
     powershell -command "irm https://get.activated.win | iex"
 goto start
