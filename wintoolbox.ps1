@@ -1,9 +1,12 @@
 $temp = $env:Temp
 
 cd $temp
-rmdir "UltimateWindowsToolbox"
-mkdir "UltimateWindowsToolbox"
+
+Remove-Item -Recurse "UltimateWindowsToolbox"
+New-Item -Name "UltimateWindowsToolbox" -Type Directory
+
 cd "UltimateWindowsToolbox"
+
 Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/ultimatewindowstoolbox.cmd -OutFile "ultimatewindowstoolbox.cmd"
 Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/welcome.txt -OutFile "welcome.txt"
 
