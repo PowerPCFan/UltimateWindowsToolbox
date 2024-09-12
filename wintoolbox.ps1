@@ -2,7 +2,7 @@ $temp = $env:Temp
 
 cd $temp
 
-Remove-Item -Recurse -Force "UltimateWindowsToolbox"
+Remove-Item -Recurse -Force -Confirm:$false "UltimateWindowsToolbox"
 New-Item -Name "UltimateWindowsToolbox" -Type Directory
 
 cd "UltimateWindowsToolbox"
