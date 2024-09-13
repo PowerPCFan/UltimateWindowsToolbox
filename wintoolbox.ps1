@@ -1,10 +1,14 @@
 $temp = $env:Temp
 
-Remove-Item "$temp\ultimatewindowstoolbox.cmd"
-Remove-Item "$temp\welcome.txt"
+cd $temp
 
-Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/ultimatewindowstoolbox.cmd -OutFile "$temp\UltimateWindowsToolbox\ultimatewindowstoolbox.cmd"
-Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/welcome.txt -OutFile "$temp\UltimateWindowsToolbox\welcome.txt"
+Remove-Item -Recurse -Force -Confirm:$false "UltimateWindowsToolbox"
+New-Item -Name "UltimateWindowsToolbox" -Type Directory
 
-Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
-powershell.exe "$temp\ultimatewindowstoolbox.cmd"
+cd "UltimateWindowsToolbox"
+
+Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/ultimatewindowstoolbox.cmd -OutFile "ultimatewindowstoolbox.cmd"
+Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/welcome.txt -OutFile "welcome.txt"
+
+Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser -Force
+powershell.exe ".\ultimatewindowstoolbox.cmd"
