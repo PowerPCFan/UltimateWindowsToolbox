@@ -8,7 +8,7 @@ color 0f
 mode 175,40
 
 :: Enable ANSI Escape Sequences
-Reg.exe add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
+reg add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
 
 ::Enable Delayed Expansion
 setlocal EnableDelayedExpansion > nul
@@ -24,7 +24,7 @@ if %errorLevel% == 0 (
 
 :choco-check
     cls
-        if exist "C:\ProgramData\chocolatey\bin\choco.exe" (
+        if exist "%systemdrive%\ProgramData\chocolatey\bin\choco.exe" (
             goto start
         ) else (
             echo Chocolatey needs to be installed. Installing...
@@ -65,8 +65,8 @@ if %errorLevel% == 0 (
     if errorlevel 7 goto tweak-script
     if errorlevel 6 goto apps
     if errorlevel 5 goto windowstweaks
-    if errorlevel 4 goto ramtestverify
-    if errorlevel 3 goto repairverify
+    if errorlevel 4 goto ramtest
+    if errorlevel 3 goto repair
     if errorlevel 2 goto massgrave
     if errorlevel 1 goto winutil
 
@@ -90,9 +90,12 @@ goto start
 
 :winutil
     cls
-    echo "Starting Chris Titus Tech Winutil"
-    timeout /t 2
-    start powershell -noexit -command "irm christitus.com/win | iex"
+    echo %blue%===================================================================
+    echo       %white%Would you like to start the Chris Titus Tech Winutil?
+    echo %blue%===================================================================
+    choice /c yn /n /m "%pink%[%white%Y%pink%] %white%Yes %pink%[%white%N%pink%] %white%No"
+    if errorlevel 2 goto start
+    if errorlevel 1 start powershell -noexit -command "irm christitus.com/win | iex"
 goto start
 
 :massgrave
@@ -102,117 +105,94 @@ goto start
     echo       %white%You should pay for a real Windows license. 
     echo          %white%Are you sure you'd like to proceed?
     echo %blue%======================================================
-    pause
-    powershell -command "irm https://get.activated.win | iex"
+    choice /c yn /n /m "%pink%[%white%Y%pink%] %white%Yes %pink%[%white%N%pink%] %white%No"
+    if errorlevel 2 goto start
+    if errorlevel 1 start powershell -command "irm https://get.activated.win | iex"
 goto start
 
-:repairverify
+:repair
     cls
-    echo -----------------------------------------------------------------------------------
-    echo ****You need to REBOOT your PC after running this script.****
-    echo Press 1 to continue and 0 to go back.
-    echo -----------------------------------------------------------------------------------
-    echo 1. Proceed
-    echo 0. Go back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto repairscript
-    if '%choice%'=='0' goto start
-    echo "%choice%" is not valid, try again
+    echo %blue%-----------------------------------------------------------------------------------
+    choice /c sde /n /m "%pink%[%white%S%pink%] %white%Run System File Checker %pink%[%white%D%pink%] %white%Run DISM %pink%[%white%E%pink%] %white%Exit"
+    echo %blue%-----------------------------------------------------------------------------------%white%
+    if errorlevel 3 goto start
+    if errorlevel 2 DISM /Online /Cleanup-Image /RestoreHealth
+    if errorlevel 1 sfc /scannow
 
-:repairscript
+:ramtest
     cls
-    sfc /scannow
-    cls
-    DISM /Online /Cleanup-Image /RestoreHealth  
-goto start
-
-:ramtestverify
-    cls
-    echo IMPORTANT INSTRUCTIONS: 
+    echo %white%IMPORTANT INSTRUCTIONS: 
     echo If you decide to proceed, a Memory Diagnostic window will open.
     echo Press the button to restart now and check for problems. 
-    echo -----------------------------------------------------------------------
-    echo 1. YES, Proceed
-    echo 0. NO, Go back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' cmd /k C:\WINDOWS\system32\MdSched.exe
-    if '%choice%'=='0' goto start
-    echo "%choice%" is not valid, try again
+    echo %blue%-----------------------------------------------------------------------
+    echo %white%Would you like to proceed?
+    choice /c yn /n /m "%pink%[%white%Y%pink%] %white%Yes %pink%[%white%N%pink%] %white%No"
+    if errorlevel 2 goto start
+    if errorlevel 1 cmd /c %SystemRoot%\System32\MdSched.exe
+   
 
 :windowstweaks
     cls
-    echo ============================================================================
-    echo                      +++ WINDOWS TWEAKS (Page 1) +++
-    echo ============================================================================                                    
-    echo 1. Uninstall Microsoft Edge
-    echo 2. Enable/Disable Bing Search in start menu searchbar
-    echo 3. Enable/Disable Verbose Mode
-    echo 4. Enable/Disable Hibernation
-    echo 5. Enable/Disable Long Paths
-    echo 6. Reset Windows Update
-    echo 7. Change the alignment of the Taskbar
-    echo 8. Change the behavior of UAC (User Account Control)
-    echo 9. Change Windows SmartScreen settings
+    echo %blue%============================================================================
+    echo                      %pink%+++ %white%WINDOWS TWEAKS (Page 1) %pink%+++
+    echo %blue%============================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Uninstall Microsoft Edge
+    echo %pink%[%white%2%pink%]%white% Enable/Disable Bing Search in start menu searchbar
+    echo %pink%[%white%3%pink%]%white% Enable/Disable Verbose Mode
+    echo %pink%[%white%4%pink%]%white% Enable/Disable Hibernation
+    echo %pink%[%white%5%pink%]%white% Enable/Disable Long Paths
+    echo %pink%[%white%6%pink%]%white% Reset Windows Update
+    echo %pink%[%white%7%pink%]%white% Change the alignment of the Taskbar
+    echo %pink%[%white%8%pink%]%white% Change the behavior of UAC (User Account Control)
+    echo %pink%[%white%9%pink%]%white% Change Windows SmartScreen settings
     echo.
-    echo 0. Go Back
-    echo Press 'n' to go to the next page
-    echo ============================================================================
-    set choice=
-    set /p choice=Choose an option and type the corresponding number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto removemsedge
-    if '%choice%'=='2' goto bingsearch
-    if '%choice%'=='3' goto verbose
-    if '%choice%'=='4' goto hibernate
-    if '%choice%'=='5' goto longpaths
-    if '%choice%'=='6' goto resetupdateverify
-    if '%choice%'=='7' goto taskbaralignment
-    if '%choice%'=='8' goto uac
-    if '%choice%'=='9' goto smartscreen
-    if '%choice%'=='0' goto start
-    if '%choice%'=='n' goto windowstweakspage2
-    echo "%choice%" is not valid, try again
-    echo.
+    echo %pink%[%white%0%pink%]%white% Go Back
+    echo Press %pink%[%white%n%pink%]%white% to go to the next page
+    echo %blue%============================================================================%white%
+    choice /c 1234567890n /n /m "» "
+    if errorlevel 11 goto windowstweakspage2
+    if errorlevel 10 goto start
+    if errorlevel 9 goto smartscreen
+    if errorlevel 8 goto uac
+    if errorlevel 7 goto taskbaralignment
+    if errorlevel 6 goto resetupdateverify
+    if errorlevel 5 goto longpaths
+    if errorlevel 4 goto hibernate
+    if errorlevel 3 goto verbose
+    if errorlevel 2 goto bingsearch
+    if errorlevel 1 goto removemsedge
 goto start
 
 :windowstweakspage2
     cls
-    echo ============================================================================
-    echo                      +++ WINDOWS TWEAKS (Page 2) +++
-    echo ============================================================================                                    
-    echo 1. Enable/Disable Windows Error Reporting
-    echo 2. Enable/Disable Location Services
-    echo 3. Enable/Disable Storage Sense
-    echo 4. Enable/Disable Teredo IPv6 Tunneling
-    echo 5. Enable/Disable WiFi-Sense
-    echo 6. Configure the HOSTS file to block telemetry in Windows
-    echo 7. Make Windows use UTC Time
-    echo 8. Disable/Enable Windows Copilot
+    echo %blue%============================================================================
+    echo                      %pink%+++ %white%WINDOWS TWEAKS (Page 2) %pink%+++
+    echo %blue%============================================================================%white%                       
+    echo %pink%[%white%1%pink%]%white% Enable/Disable Windows Error Reporting
+    echo %pink%[%white%2%pink%]%white% Enable/Disable Location Services
+    echo %pink%[%white%3%pink%]%white% Enable/Disable Storage Sense
+    echo %pink%[%white%4%pink%]%white% Enable/Disable Teredo IPv6 Tunneling
+    echo %pink%[%white%5%pink%]%white% Enable/Disable WiFi-Sense
+    echo %pink%[%white%6%pink%]%white% Configure the HOSTS file to block telemetry in Windows
+    echo %pink%[%white%7%pink%]%white% Make Windows use UTC Time
+    echo %pink%[%white%8%pink%]%white% Disable/Enable Windows Copilot
     echo.
-    echo 0. Go Back
-    echo Press 'b' to go to the previous page
-    echo Press 'n' to go to the next page
+    echo %pink%[%white%0%pink%]%white% Go Back
+    echo Press %pink%[%white%b%pink%]%white% to go to the previous page
+    echo Press %pink%[%white%n%pink%]%white% to go to the next page
     echo ============================================================================
-    set choice=
-    set /p choice=Choose an option and type the corresponding number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto winerrorreporting
-    if '%choice%'=='2' goto locationservices
-    if '%choice%'=='3' goto storagesense
-    if '%choice%'=='4' goto teredo
-    if '%choice%'=='5' goto wifi-sense
-    if '%choice%'=='6' goto hosts-telemetry
-    if '%choice%'=='7' goto utc-time
-    if '%choice%'=='8' goto copilot
-    if '%choice%'=='0' goto start
-    if '%choice%'=='b' goto windowstweaks
-    if '%choice%'=='n' goto windowstweakspage3
-    echo "%choice%" is not valid, try again
-    echo.
+    choice /c 123456780bn /n /m "» "
+    if errorlevel 11 goto windowstweakspage3
+    if errorlevel 10 goto windowstweaks
+    if errorlevel 9 goto start
+    if errorlevel 8 goto copilot
+    if errorlevel 7 goto utc-time
+    if errorlevel 6 goto hosts-telemetry
+    if errorlevel 5 goto wifi-sense
+    if errorlevel 4 goto teredo
+    if errorlevel 3 goto storagesense
+    if errorlevel 2 goto locationservices
+    if errorlevel 1 goto winerrorreporting
 goto start
 
 :windowstweakspage3
