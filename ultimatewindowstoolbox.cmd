@@ -5,7 +5,7 @@ set white=[97m
 set pink=[95m
 set blue=[96m
 color 0f
-mode 175,40
+mode 175,38
 
 :: Enable ANSI Escape Sequences
 reg add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
@@ -147,7 +147,7 @@ goto start
     echo %pink%[%white%9%pink%]%white% Change Windows SmartScreen settings
     echo.
     echo %pink%[%white%0%pink%]%white% Go Back
-    echo Press %pink%[%white%n%pink%]%white% to go to the next page
+    echo Press %pink%[%white%N%pink%]%white% to go to the next page
     echo %blue%============================================================================%white%
     choice /c 1234567890n /n /m "» "
     if errorlevel 11 goto windowstweakspage2
@@ -178,9 +178,9 @@ goto start
     echo %pink%[%white%8%pink%]%white% Disable/Enable Windows Copilot
     echo.
     echo %pink%[%white%0%pink%]%white% Go Back
-    echo Press %pink%[%white%b%pink%]%white% to go to the previous page
-    echo Press %pink%[%white%n%pink%]%white% to go to the next page
-    echo ============================================================================
+    echo Press %pink%[%white%B%pink%]%white% to go to the previous page
+    echo Press %pink%[%white%N%pink%]%white% to go to the next page
+    echo %blue%============================================================================%white%
     choice /c 123456780bn /n /m "» "
     if errorlevel 11 goto windowstweakspage3
     if errorlevel 10 goto windowstweaks
@@ -197,33 +197,29 @@ goto start
 
 :windowstweakspage3
     cls
-    echo ============================================================================
-    echo                      +++ WINDOWS TWEAKS (Page 3) +++
-    echo ============================================================================                                    
-    echo 1. Configure Google Chrome Manifest V2 support
-    echo 2. Enable Dark Mode
-    echo 3. Disable Cortana
-    echo 4. Lower Keyboard + Mouse Data Queue to reduce input lag
+    echo %blue%============================================================================
+    echo                      %pink%+++ %white%WINDOWS TWEAKS (Page 3) %pink%+++
+    echo %blue%============================================================================%white%                    
+    echo %pink%[%white%1%pink%]%white% Configure Google Chrome Manifest V2 support
+    echo %pink%[%white%2%pink%]%white% Enable Dark Mode
+    echo %pink%[%white%3%pink%]%white% Disable Cortana
+    echo %pink%[%white%4%pink%]%white% Lower Keyboard + Mouse Data Queue to reduce input lag
     echo.
-    echo 0. Go Back
-    echo Press 'b' to go to the previous page
-    echo ============================================================================
-    set choice=
-    set /p choice=Choose an option and type the corresponding number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto chrome-mv2
-    if '%choice%'=='2' goto darkmode
-    if '%choice%'=='3' goto cortana
-    if '%choice%'=='4' reg add "HKLM\SYSTEM\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d "30" /f & reg add "HKLM\SYSTEM\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d "35" /f
-    if '%choice%'=='0' goto start
-    if '%choice%'=='b' goto windowstweakspage2
-    echo "%choice%" is not valid, try again
-    echo.
+    echo %pink%[%white%0%pink%]%white% Go Back
+    echo Press %pink%[%white%B%pink%]%white% to go to the previous page
+    echo %blue%============================================================================%white%
+    choice /c 12340b /n /m "» "
+    if errorlevel 6 goto windowstweakspage2
+    if errorlevel 5 goto start
+    if errorlevel 4 reg add "HKLM\SYSTEM\CurrentControlSet\Services\mouclass\Parameters" /v "MouseDataQueueSize" /t REG_DWORD /d "30" /f & reg add "HKLM\SYSTEM\CurrentControlSet\Services\kbdclass\Parameters" /v "KeyboardDataQueueSize" /t REG_DWORD /d "35" /f
+    if errorlevel 3 goto cortana
+    if errorlevel 2 goto darkmode
+    if errorlevel 1 goto chrome-mv2
 goto start
 
 :removemsedge
-    cls
     @echo off
+    cls
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     echo                                      WARNING!
     echo            This will permanently remove Edge and all of its components!
@@ -231,6 +227,10 @@ goto start
     echo         If you'd like to cancel the Edge uninstallation, close this window.
     echo !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     pause
+        echo Setting environment variables...
+        set desktop=%userprofile%\Desktop
+        set onedrivedesktop=%userprofile%\OneDrive\Desktop
+
         echo Taking ownership of C:\Program Files (x86)\Microsoft...
         takeown /f "C:\Program Files (x86)\Microsoft" /r /d y > nul 2>&1
     
@@ -238,57 +238,57 @@ goto start
         icacls "C:\Program Files (x86)\Microsoft" /grant %username%:F /t > nul 2>&1
     
         echo Deleting C:\Program Files (x86)\Microsoft directory and its contents...
-        rd /s /q "C:\Program Files (x86)\Microsoft"
+        rd /s /q "C:\Program Files (x86)\Microsoft" > nul 2>&1
         echo Deletion complete.
     
         echo Deleting Microsoft Edge shortcut from desktop...
-        del /f "%userprofile%\Desktop\Microsoft Edge.lnk" > nul 2>&1
+        del /f "%desktop%\Microsoft Edge.lnk" > nul 2>&1
+        :: Just in case the person uses OneDrive
+        del /f "%onedrivedesktop%\Microsoft Edge.lnk" > nul 2>&1
         echo Shortcut deletion complete.
-    
-        del "%desktop_folder%\%shortcut_name%"
-        echo Edge shortcut removed successfully.
 
-        del "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk"
+        del "%systemdrive%\ProgramData\Microsoft\Windows\Start Menu\Programs\Microsoft Edge.lnk" > nul 2>&1
         echo Edge was removed from the start menu successfully. 
 
-        del "%appdata%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk"
-        del "%userprofile%\AppData\Local\iconcache.db"
-        echo Edge was removed from the taskbar successfully. 
-      
+        del "%appdata%\Microsoft\Internet Explorer\Quick Launch\User Pinned\TaskBar\Microsoft Edge.lnk" > nul 2>&1
+        del "%localappdata%\iconcache.db" > nul 2>&1
+        echo Edge was removed from the taskbar successfully.
+        echo.
+        echo Restarting Explorer for changes to take effect...
+        taskkill /f /im explorer.exe > nul 2>&1
+        start explorer.exe
         pause
 goto start
 
 :bingsearch
     cls
-    echo ==================
-    echo 1. Disable Bing Search in Start Menu
-    echo 2. Enable Bing Search in Start Menu
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "0" /f > nul
+    echo %blue%==================
+    echo %pink%[%white%1%pink%]%white% Disable Bing Search in Start Menu
+    echo %pink%[%white%2%pink%]%white% Enable Bing Search in Start Menu
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweaks
+    if errorlevel 2 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "1" /f > nul
+    if errorlevel 1 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Explorer" /v "DisableSearchBoxSuggestions" /t REG_DWORD /d "0" /f > nul
 echo Process completed successfully. 
 echo Press any key to restart Explorer for the changes to take effect.  
 pause > nul
 taskkill /f /im explorer.exe > nul
-explorer.exe
+start explorer.exe
 echo Process complete. Press any key to continue. 
 pause > nul
 goto windowstweaks
 
 :verbose
     cls
-    echo ==================
-    echo 1. Enable Verbose Mode
-    echo 2. Disable Verbose Mode
-    echo 0. Go Back
-    if '%choice%'=='0' goto windowstweaks
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "0" /f > nul
+    echo %blue%==================
+    echo %pink%[%white%1%pink%]%white% Enable Verbose Mode
+    echo %pink%[%white%2%pink%]%white% Disable Verbose Mode
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweaks
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "VerboseStatus" /t REG_DWORD /d "1" /f > nul
 cls
 echo Process completed successfully. 
 pause
@@ -296,28 +296,26 @@ goto windowstweaks
 
 :hibernate
 cls
-    echo ===============================================================================================
+    echo %blue%===============================================================================================%white%
     echo Hibernation saves the RAM contents to your hard drive and shuts down as opposed to sleeping.
     echo If you're on a laptop, it's your choice - you can have it on or off. (I prefer off.)
     echo If you're on a desktop, ALWAYS have hibernation turned off.
     echo Some systems might not support hibernation or already have it enabled or disabled.
     echo If you get an error related to that, it's fine.
-    echo ===============================================================================================
-    echo 1. Disable Hibernation
-    echo 2. Enable Hibernation
-    echo 0. Go Back
-    if '%choice%'=='0' goto windowstweaks
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' powercfg.exe /hibernate off
-    if '%choice%'=='2' powercfg.exe /hibernate on
+    echo %blue%===============================================================================================
+    echo %pink%[%white%1%pink%]%white% Disable Hibernation
+    echo %pink%[%white%2%pink%]%white% Enable Hibernation
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweaks
+    if errorlevel 2 powercfg.exe /hibernate on
+    if errorlevel 1 powercfg.exe /hibernate off
 pause
 goto windowstweaks
 
 :longpaths
-    cls
-    echo ================================================================================================
+cls
+    echo %blue%================================================================================================%white%
     echo                       +++ Background Info about File Paths in Windows +++
     echo.
     echo By default, there is a file path limit of 260 characters in Windows.
@@ -325,34 +323,29 @@ goto windowstweaks
     echo With the settings below, you can enable Long File Paths which bypasses the 260 character limit.
     echo Even though there is a limit set by default, there isn't a good reason to have it on.
     echo Therefore I strongly recommend enabling Long File Paths below.
-    echo ================================================================================================
-    echo 1. Enable Long File Paths (Recommended)
-    echo 2. Disable Long File Paths
-    echo 0. Go Back
-    if '%choice%'=='0' goto windowstweaks
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "0" /f > nul
-cls
-echo Process completed successfully. 
-pause
+    echo %blue%================================================================================================
+    echo %pink%[%white%1%pink%]%white% Enable Long File Paths (Recommended)
+    echo %pink%[%white%2%pink%]%white% Disable Long File Paths
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweaks
+    if errorlevel 2 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 1 reg add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v "LongPathsEnabled" /t REG_DWORD /d "1" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
 goto windowstweaks
+
 
 :resetupdateverify
     cls
-    echo Your PC will reboot after this! Are you sure you would like to proceed?
-    echo -----------------------------------------------------------------------------------
-    echo 1. YES, Proceed
-    echo 0. NO, Go back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto resetupdatescript
-    if '%choice%'=='0' goto start
-    echo "%choice%" is not valid, try again
-    
+    echo %white%Your PC will reboot after this! Are you sure you would like to proceed?
+    echo %blue%-----------------------------------------------------------------------------------%white%
+    choice /c yn /n /m "%pink%[%white%Y%pink%] %white%Yes %pink%[%white%N%pink%] %white%No"
+    if errorlevel 2 goto start
+    if errorlevel 1 goto resetupdatescript
+goto start
+
 :resetupdatescript
     net stop wuauserv
     net stop cryptSvc
@@ -364,57 +357,56 @@ goto windowstweaks
     net start cryptSvc
     net start bits
     net start msiserver
-    shutdown /r /c "Shutting down in 10 seconds." /t 10
+    shutdown /r /c "Shutting down in 15 seconds." /t 10
 goto start
 
 :taskbaralignment
-    cls
-    echo =====================
-    echo   Taskbar Alignment
-    echo =====================
-    echo 1. Left Align
-    echo 2. Center Align
-    echo 3. Right Align (only works on Windows 10)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='2' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='3' reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "2" /f > nul
-    if '%choice%'=='0' goto windowstweaks
 cls
-echo Process completed successfully. 
-pause
+    echo %blue%====================%white%
+    echo   Taskbar Alignment
+    echo %blue%====================%white%
+    echo %pink%[%white%1%pink%]%white% Left Align
+    echo %pink%[%white%2%pink%]%white% Center Align
+    echo %pink%[%white%3%pink%]%white% Right Align (only works on Windows 10)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 1230 /n /m "» "
+    if errorlevel 4 goto windowstweaks
+    if errorlevel 3 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "2" /f > nul
+    if errorlevel 2 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "1" /f > nul
+    if errorlevel 1 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarAl" /t REG_DWORD /d "0" /f > nul
+
+    cls
+    echo Process completed successfully. 
+    pause
 goto windowstweaks
 
 :uac
-    cls
+cls
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
     echo                                 USER ACCOUNT CONTROL SETTINGS
     echo.
     echo Choose when to be notified about changes to your computer
     echo User Account Control helps prevent potentially harmful programs from making changes to your computer.
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo 1. Always notify me about any changes made to my computer, even if done by me (most secure)
-    echo 2. Notify me only when apps try to make changes to my computer (Default)
-    echo 3. Notify me only when apps try to make changes to my computer (Don't dim my desktop)
-    echo 4. NEVER notify me about any changes made to my computer (NOT RECOMMENDED)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "2" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
-    if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
-    if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-cls
-echo Process completed successfully. 
-pause
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
+    echo %pink%[%white%1%pink%]%white% Always notify me about any changes made to my computer, even if done by me (most secure)
+    echo %pink%[%white%2%pink%]%white% Notify me only when apps try to make changes to my computer (Default)
+    echo %pink%[%white%3%pink%]%white% Notify me only when apps try to make changes to my computer (Don't dim my desktop)
+    echo %pink%[%white%4%pink%]%white% NEVER notify me about any changes made to my computer (NOT RECOMMENDED)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 12340 /n /m "» "
+    if errorlevel 5 goto windowstweaks
+    if errorlevel 4 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 3 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "0" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "5" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d "1" /f > nul & reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d "2" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
 goto windowstweaks
 
 :smartscreen
-    cls
+cls
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
     echo                                        Microsoft Defender SmartScreen
     echo.
     echo Windows automatically shields you from threats with Microsoft Defender SmartScreen. 
@@ -426,23 +418,22 @@ goto windowstweaks
     echo The other version is integrated with Windows Security/Defender and protects against malicious apps and executables.
     echo.
     echo Below, you can disable the Windows Security version of SmartScreen. The Edge version can be disabled in Edge settings.
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo 1. Enable SmartScreen for Windows Security (default)
-    echo 2. Disable SmartScreen for Windows Security
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-cls
-echo Process completed successfully. 
-pause
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
+    echo %pink%[%white%1%pink%]%white% Enable SmartScreen for Windows Security (default)
+    echo %pink%[%white%2%pink%]%white% Disable SmartScreen for Windows Security
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweaks
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
 goto windowstweaks
 
 :winerrorreporting
     cls
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
     echo                                        Windows Error Reporting
     echo.
     echo Windows Error Reporting (WER) is a built-in system in Windows that gathers information when apps (or the system) crashes. 
@@ -453,74 +444,71 @@ goto windowstweaks
     echo Disabling it lets you troubleshoot issues yourself without being bugged by Microsoft asking for your data.
     echo.
     echo Below, you can enable or disable Windows Error Reporting, for the current user or all users. 
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo 1. Enable Windows Error Reporting for the current user (default)
-    echo 2. Disable Windows Error Reporting for the current user
-    echo.
-    echo 3. Enable Windows Error Reporting for ALL USERS (default)
-    echo 4. Disable Windows Error Reporting for ALL USERS
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='2' reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='3' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='4' reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-cls
-echo Process completed successfully. 
-pause
-goto windowstweaks
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
+    echo %pink%[%white%1%pink%]%white% Enable Windows Error Reporting for the current user (default)
+    echo %pink%[%white%2%pink%]%white% Disable Windows Error Reporting for the current user
+    echo %pink%[%white%3%pink%]%white% Enable Windows Error Reporting for ALL USERS (default)
+    echo %pink%[%white%4%pink%]%white% Disable Windows Error Reporting for ALL USERS
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 12340 /n /m "» "
+    if errorlevel 5 goto windowstweakspage2
+    if errorlevel 4 reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+    if errorlevel 3 reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 2 reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+    if errorlevel 1 reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
+goto windowstweakspage2
 
 :locationservices
-    cls
+cls
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
     echo                                    Location Services
     echo.
     echo Location Services are tracking your location 24/7. It might seem helpful for maps or weather,
     echo but it isn't worth it to be constantly giving Microsoft your location. They're just harvesting data. 
     echo.
     echo Below, you can enable or disable Location Services. I would HIGHLY recommend disabling it.
-    echo ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    echo 1. Enable Location Services (please don't do this...)
-    echo 2. Disable Location Services (Highly Recommended)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-echo Process completed successfully. 
-pause
-goto windowstweaks
+    echo %blue%~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~%white%
+    echo %pink%[%white%1%pink%]%white% Enable Location Services (please don't do this...)
+    echo %pink%[%white%2%pink%]%white% Disable Location Services (Highly Recommended)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
+goto windowstweakspage2
 
 :storagesense
-    cls
-    echo ============================================================================================
+cls
+    echo %blue%============================================================================================%white%
     echo                                     Storage Sense
-    echo --------------------------------------------------------------------------------------------
+    echo %blue%--------------------------------------------------------------------------------------------%white%
     echo Storage Sense is a built-in Windows feature that automatically frees up disk space. 
     echo It can clean temporary files, empty the recycle bin, and even remove old versions of files. 
     echo This is helpful for keeping your drive from becoming full and improving performance. 
     echo However, you might want to disable it if you prefer more control over what gets deleted.
-    echo ============================================================================================
-    echo 1. Enable Storage Sense (default)
-    echo 2. Disable Storage Sense
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-echo Process completed successfully. 
-pause
-goto windowstweaks
+    echo %blue%============================================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable Storage Sense (default)
+    echo %pink%[%white%2%pink%]%white% Disable Storage Sense
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
+goto windowstweakspage2
+
 
 :teredo
-    cls
-    echo ================================================================================================================================
+cls
+    echo %blue%===============================================================================================================================%white%
     echo                                                  Teredo IPv6 Tunneling
     echo.
     echo Teredo is a tunneling protocol that facilitates IPv6 connectivity over IPv4 networks.
@@ -537,49 +525,46 @@ goto windowstweaks
     echo.
     echo Pro: Streamlines network communication path, potentially improving performance for tasks that don't require IPv6.
     echo Con: Disables IPv6 connectivity on IPv4-only networks, limiting access to some resources.
-    echo ================================================================================================================================
-    echo 1. Enable Teredo (default)
-    echo 2. Disable Teredo
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' netsh interface teredo set state enabled
-    if '%choice%'=='2' netsh interface teredo set state disabled
-    if '%choice%'=='0' goto windowstweaks
-
-echo Process completed successfully. 
-pause
-goto windowstweaks
+    echo %blue%===============================================================================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable Teredo (default)
+    echo %pink%[%white%2%pink%]%white% Disable Teredo
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 netsh interface teredo set state disabled
+    if errorlevel 1 netsh interface teredo set state enabled
+    cls
+    echo Process completed successfully. 
+    pause
+goto windowstweakspage2
 
 :wifi-sense
-    cls
-    echo ===============================================================================================
+cls
+    echo %blue%===============================================================================================%white%
     echo                                        WiFi-Sense
     echo -----------------------------------------------------------------------------------------------
     echo Wi-Fi Sense SOUNDS convenient, automatically connecting you to public Wi-Fi. 
     echo But it's a huge security risk. Connecting to unknown public Wi-Fi can leave your data vulnerable. 
     echo To add to this, Wi-Fi Sense spies on your geolocation 24/7. 
     echo Disabling it protects your privacy and gives you control over choosing secure Wi-Fi networks.
-    echo ===============================================================================================
-    echo 1. Enable WiFi-Sense (default)
-    echo 2. Disable WiFi-Sense
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='0' goto windowstweaks
-echo Process completed successfully. 
-pause
-goto windowstweaks
+    echo %blue%===============================================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable WiFi-Sense (default)
+    echo %pink%[%white%2%pink%]%white% Disable WiFi-Sense
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
+    cls
+    echo Process completed successfully. 
+    pause
+goto windowstweakspage2
 
 :hosts-telemetry
-    cls
-    echo ====================================================================================================
+cls
+    echo %blue%=====================================================================================================%white%
     echo                                    HOSTS file and telemetry
-    echo ----------------------------------------------------------------------------------------------------
+    echo %blue%-----------------------------------------------------------------------------------------------------%white%
     echo The HOSTS file has been around for years and it can be used to block websites and connections.
     echo Windows 10 and especially Windows 11 have a ton of telemetry and data that gets sent to Microsoft.
     echo You can use the HOSTS file to block the websites that Microsoft uses to harvest data from you.
@@ -587,19 +572,21 @@ goto windowstweaks
     echo If you experience problems with Microsoft services: 
     echo * Use the "Revert to default HOSTS file" option below
     echo * Use the "Revert to previous HOSTS file before tweaks" option below
-    echo ====================================================================================================
-    echo 1. Enable the custom HOSTS file to block telemetry (Last Updated September 5, 2024)
-    echo 2. Revert to default HOSTS file
-    echo 3. Revert to previous HOSTS file before tweaks (only works if you've done tweaks previously)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto customhosts-wget
-    if '%choice%'=='2' goto stockhosts
-    if '%choice%'=='3' goto previoushosts
-    if '%choice%'=='0' goto windowstweaks
-goto windowstweaks
+    echo %blue%=====================================================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable the custom HOSTS file to block telemetry (Last Updated September 5, 2024)
+    echo %pink%[%white%2%pink%]%white% Revert to default HOSTS file
+    echo %pink%[%white%3%pink%]%white% Revert to previous HOSTS file before tweaks (only works if you've done tweaks previously)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 1230 /n /m "» "
+    if errorlevel 4 goto windowstweakspage2
+    if errorlevel 3 goto previoushosts
+    if errorlevel 2 goto stockhosts
+    if errorlevel 1 goto customhosts-wget
+cls
+echo Process completed successfully. 
+pause
+goto windowstweakspage2
+
 
 :customhosts-wget
     cls
@@ -638,158 +625,159 @@ pause
 goto hosts-telemetry
 
 :utc-time
-    cls
-    echo ===============================================================
+cls
+    echo %blue%=================================================================%white%
     echo                           UTC Time
-    echo ---------------------------------------------------------------
+    echo %blue%-------------------------------------------------%white%
     echo By default, Windows uses Local Time and Linux uses UTC Time.
     echo If you're dual-booting, there will be time errors and problems.
     echo You can fix this by forcing Windows to use UTC Time.
-    echo ===============================================================
-    echo 1. Enable UTC Time
-    echo 2. Disable UTC Time (default)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='2' reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
-    if '%choice%'=='0' goto windowstweaks
+    echo %blue%=================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable UTC Time
+    echo %pink%[%white%2%pink%]%white% Disable UTC Time (default)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
+    if errorlevel 1 reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
+cls
 echo Process completed successfully. 
 pause
-goto windowstweaks
+goto windowstweakspage2
 
 :copilot
-    cls
-    echo ======================================================================
+cls
+    echo %blue%=================================================================%white%
     echo                            Windows Copilot
-    echo ----------------------------------------------------------------------
+    echo %blue%-----------------------------------------------------------------%white%
     echo Some Windows users like me find Copilot to be annoying and intrusive.
-    echo You can disable or enable copilot with the options below.
+    echo You can disable or enable Copilot with the options below.
     echo You may need to restart your computer for changes to take effect.
-    echo ======================================================================
-    echo 1. Enable Copilot (default setting)
-    echo 2. Disable Copilot
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
-    if '%choice%'=='2' reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
-    if '%choice%'=='0' goto windowstweaks
+    echo %blue%=================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enable Copilot (default setting)
+    echo %pink%[%white%2%pink%]%white% Disable Copilot
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage2
+    if errorlevel 2 reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
+    if errorlevel 1 reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
+cls
 echo Process completed successfully. 
 pause
-goto windowstweaks
+goto windowstweakspage2
+
 
 :chrome-mv2
-    cls
-    echo ======================================================================
+cls
+    echo %blue%=================================================================%white%
     echo        Extend Google Chrome Manifest V2 support to June 2025
-    echo ======================================================================
-    echo 1. Enabled
-    echo 2. Disabled (default)
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /t REG_DWORD /d "2" /f > nul
-    if '%choice%'=='2' reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /f > nul
-    if '%choice%'=='0' goto windowstweaks
+    echo %blue%=================================================================%white%
+    echo %pink%[%white%1%pink%]%white% Enabled
+    echo %pink%[%white%2%pink%]%white% Disabled (default)
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 120 /n /m "» "
+    if errorlevel 3 goto windowstweakspage3
+    if errorlevel 2 reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /f > nul
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /t REG_DWORD /d "2" /f > nul
+cls
 echo Process completed successfully. 
 pause
-goto windowstweaks
+goto windowstweakspage3
 
 :darkmode
-    cls
-    echo ==============================
+cls
+    echo %blue%==============================%white%
     echo        Enable Dark Mode
-    echo ==============================
-    echo 1. Yes, Enable Dark Mode
-    echo 2. No, Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v ColorPrevalence /t REG_DWORD /d 0 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 1 /f > nul & reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f > nul
-    if '%choice%'=='2' goto windowstweaks
+    echo %blue%==============================%white%
+    echo %pink%[%white%1%pink%]%white% Yes, Enable Dark Mode
+    echo %pink%[%white%2%pink%]%white% No, Go Back
+    choice /c 12 /n /m "» "
+    if errorlevel 2 goto windowstweakspage3
+    if errorlevel 1 (
+        reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v AppsUseLightTheme /t REG_DWORD /d 0 /f > nul
+        reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v ColorPrevalence /t REG_DWORD /d 0 /f > nul
+        reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 1 /f > nul
+        reg add "HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v SystemUsesLightTheme /t REG_DWORD /d 0 /f > nul
+    )
+cls
 echo Process completed successfully. 
 pause
-goto windowstweaks
+goto windowstweakspage3
 
 :cortana
-    cls
-    echo ==========================
+cls
+    echo %blue%==========================%white%
     echo      Disable Cortana
-    echo ==========================
-    echo 1. Yes, Disable Cortana
-    echo 2. No, Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f > nul
-    if '%choice%'=='2' goto windowstweaks
+    echo %blue%==========================%white%
+    echo %pink%[%white%1%pink%]%white% Yes, Disable Cortana
+    echo %pink%[%white%2%pink%]%white% No, Go Back
+    choice /c 12 /n /m "» "
+    if errorlevel 2 goto windowstweakspage3
+    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Windows Search" /v "AllowCortana" /t REG_DWORD /d "0" /f > nul
+cls
 echo Process completed successfully.
 pause
-goto windowstweaks
+goto windowstweakspage3
+
 
 
 
 :apps
     cls
-    echo ==========================
-    echo    + APP INSTALLER +
+    echo %blue%==========================
+    echo    %pink%+%white% APP INSTALLER %pink%+%white%
     echo Choose a category below:
-    echo ==========================
-    echo 1. Web Browsers
-    echo 2. Communications
-    echo 3. Development
-    echo 4. PDF Viewers + Word Processors
-    echo 5. Game Launchers
-    echo 6. Microsoft Utilities (Sysinternals Suite, Visual C++ Runtimes, etc)
-    echo 7. Multimedia Tools
-    echo 8. Utilities
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto browsers
-    if '%choice%'=='2' goto communications
-    if '%choice%'=='3' goto development
-    if '%choice%'=='4' goto pdf
-    if '%choice%'=='5' goto games
-    if '%choice%'=='6' goto msutilities
-    if '%choice%'=='7' goto multimedia
-    if '%choice%'=='8' goto utilities
-    if '%choice%'=='0' goto start
-    echo "%choice%" is not valid, try again
+    echo %blue%==========================%white%
+    echo %pink%[%white%1%pink%]%white% Web Browsers
+    echo %pink%[%white%2%pink%]%white% Communications
+    echo %pink%[%white%3%pink%]%white% Development
+    echo %pink%[%white%4%pink%]%white% PDF Viewers + Word Processors
+    echo %pink%[%white%5%pink%]%white% Game Launchers
+    echo %pink%[%white%6%pink%]%white% Microsoft Utilities (Sysinternals Suite, Visual C++ Runtimes, etc)
+    echo %pink%[%white%7%pink%]%white% Multimedia Tools
+    echo %pink%[%white%8%pink%]%white% Utilities
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 123456780 /n /m "Type the number: "
+    if errorlevel 9 goto start
+    if errorlevel 8 goto utilities
+    if errorlevel 7 goto multimedia
+    if errorlevel 6 goto msutilities
+    if errorlevel 5 goto games
+    if errorlevel 4 goto pdf
+    if errorlevel 3 goto development
+    if errorlevel 2 goto communications
+    if errorlevel 1 goto browsers
+pause
+goto apps
 
 :browsers
-    cls
-    echo ----------------------------------------------------------------------------------------------------
-    echo                                  + Web browser installer +
+cls
+    echo %blue%----------------------------------------------------------------------------------------------------
+    echo                                  %pink%+%white% Web browser installer %pink%+%white%
     echo You can install a web browser here. 
     echo You may want to install a browser before or after uninstalling Edge or if you'd like a new browser.
-    echo ----------------------------------------------------------------------------------------------------
+    echo %blue%----------------------------------------------------------------------------------------------------%white%
     echo.
-    echo 1. Install Chrome
-    echo 2. Install Firefox
-    echo 3. Install Brave
-    echo 4. Install Microsoft Edge
-    echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install googlechrome -y"
-    if '%choice%'=='2' start powershell -command "choco install firefox -y"
-    if '%choice%'=='3' start powershell -command "choco install brave -y"
-    if '%choice%'=='4' start powershell -command "choco install microsoft-edge -y"
-    if '%choice%'=='0' goto apps
+    echo %pink%[%white%1%pink%]%white% Install Chrome
+    echo %pink%[%white%2%pink%]%white% Install Firefox
+    echo %pink%[%white%3%pink%]%white% Install Brave
+    echo %pink%[%white%4%pink%]%white% Install Microsoft Edge
+    echo %pink%[%white%0%pink%]%white% Go Back
+    choice /c 12340 /n /m "Type the number: "
+    if errorlevel 5 goto apps
+    if errorlevel 4 start powershell -command "choco install microsoft-edge -y"
+    if errorlevel 3 start powershell -command "choco install brave -y"
+    if errorlevel 2 start powershell -command "choco install firefox -y"
+    if errorlevel 1 start powershell -command "choco install googlechrome -y"
+pause
 goto apps
+
 
 :communications
     cls
-    echo ---------------------------
-    echo     + Communications +
-    echo ---------------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Communications %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. Discord
     echo 2. Signal
@@ -798,23 +786,23 @@ goto apps
     echo 5. Telegram
     echo 6. Zoom
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install discord -y"
-    if '%choice%'=='2' start powershell -command "choco install signal -y"
-    if '%choice%'=='3' start powershell -command "choco install skype -y"
-    if '%choice%'=='4' start powershell -command "choco install slack -y"
-    if '%choice%'=='5' start powershell -command "choco install telegram -y"
-    if '%choice%'=='6' start powershell -command "choco install zoom -y"
-    if '%choice%'=='0' goto apps
+    choice /c 1234560 /n /m "Type the number: "
+    if errorlevel 7 goto apps
+    if errorlevel 6 start powershell -command "choco install zoom -y"
+    if errorlevel 5 start powershell -command "choco install telegram -y"
+    if errorlevel 4 start powershell -command "choco install slack -y"
+    if errorlevel 3 start powershell -command "choco install skype -y"
+    if errorlevel 2 start powershell -command "choco install signal -y"
+    if errorlevel 1 start powershell -command "choco install discord -y"
+
+pause
 goto apps
 
 :development
     cls
-    echo ---------------------------
-    echo     + Development +
-    echo ---------------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Development %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. GitHub Desktop
     echo 2. Git
@@ -822,22 +810,21 @@ goto apps
     echo 4. Visual Studio Code
     echo 5. Visual Studio 2022 Community
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install github-desktop -y"
-    if '%choice%'=='2' start powershell -command "choco install git -y"
-    if '%choice%'=='3' start powershell -command "choco install notepadplusplus -y"
-    if '%choice%'=='4' start powershell -command "choco install vscode -y"
-    if '%choice%'=='5' start powershell -command "choco install visualstudio2022community -y"
-    if '%choice%'=='0' goto apps
+    choice /c 123450 /n /m "Type the number: "
+    if errorlevel 6 goto apps
+    if errorlevel 5 start powershell -command "choco install visualstudio2022community -y"
+    if errorlevel 4 start powershell -command "choco install vscode -y"
+    if errorlevel 3 start powershell -command "choco install notepadplusplus -y"
+    if errorlevel 2 start powershell -command "choco install git -y"
+    if errorlevel 1 start powershell -command "choco install github-desktop -y"
+pause
 goto apps
 
 :pdf
     cls
-    echo -------------------------------------
-    echo   + PDF Viewers & Word Processors +
-    echo -------------------------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% PDF Viewers and Word Processors %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. Adobe Acrobat Reader
     echo 2. Foxit PDF Reader
@@ -845,36 +832,33 @@ goto apps
     echo 4. Apache OpenOffice
     echo 5. Sumatra PDF
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install adobereader -y"
-    if '%choice%'=='2' start powershell -command "choco install foxitreader -y"
-    if '%choice%'=='3' start powershell -command "choco install libreoffice-fresh -y"
-    if '%choice%'=='4' start powershell -command "choco install openoffice -y"
-    if '%choice%'=='5' start powershell -command "choco install sumatrapdf -y"
-    if '%choice%'=='0' goto apps
+    choice /c 123450 /n /m "Type the number: "
+    if errorlevel 6 goto apps
+    if errorlevel 5 start powershell -command "choco install sumatrapdf -y"
+    if errorlevel 4 start powershell -command "choco install openoffice -y"
+    if errorlevel 3 start powershell -command "choco install libreoffice-fresh -y"
+    if errorlevel 2 start powershell -command "choco install foxitreader -y"
+    if errorlevel 1 start powershell -command "choco install adobereader -y"
+pause
 goto apps
 
 :games
     cls
-    echo ----------------------
-    echo   + Game Launchers +
-    echo ----------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Game Launchers %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. ATLauncher (Minecraft)
     echo 2. Epic Games Launcher
     echo 3. Nvidia GeForce NOW
     echo 4. Steam
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' goto atlauncher
-    if '%choice%'=='2' start powershell -command "choco install epicgameslauncher -y"
-    if '%choice%'=='3' start powershell -command "choco install nvidia-geforce-now -y"
-    if '%choice%'=='4' start powershell -command "choco install steam -y"
-    if '%choice%'=='0' goto apps
+    choice /c 12340 /n /m "Type the number: "
+    if errorlevel 5 goto apps
+    if errorlevel 4 start powershell -command "choco install steam -y" 
+    if errorlevel 3 start powershell -command "choco install nvidia-geforce-now -y"
+    if errorlevel 2 start powershell -command "choco install epicgameslauncher -y"
+    if errorlevel 1 goto atlauncher
 goto apps
 
 :atlauncher
@@ -890,30 +874,28 @@ goto games
 
 :msutilities
     cls
-    echo ----------------------------
-    echo   + Microsoft Utilities +
-    echo ----------------------------
+    echo %blue%----------------------------
+    echo   %pink%+%white% Microsoft Utilities %pink%+%white%
+    echo %blue%----------------------------%white%
     echo.
     echo 1. Autoruns
     echo 2. Power Automate
     echo 3. Sysinternals Process Monitor
     echo 4. Visual C++ Redistributables 2015-2022 
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install autoruns -y"
-    if '%choice%'=='2' start powershell -command "choco install powerautomatedesktop -y"
-    if '%choice%'=='3' start powershell -command "choco install procmon -y"
-    if '%choice%'=='4' start powershell -command "choco install vcredist140 -y"
-    if '%choice%'=='0' goto apps
+    choice /c 12340 /n /m "Type the number: "
+    if errorlevel 5 goto apps
+    if errorlevel 4 start powershell -command "choco install vcredist140 -y"
+    if errorlevel 3 start powershell -command "choco install procmon -y"
+    if errorlevel 2 start powershell -command "choco install powerautomatedesktop -y"
+    if errorlevel 1 start powershell -command "choco install autoruns -y"
 goto apps
 
 :multimedia
     cls
-    echo ------------------------------
-    echo  Multimedia Programs (Page 1)
-    echo ------------------------------
+    echo %blue%------------------------------
+    echo   %pink%+%white% Multimedia Programs (Page 1) %pink%+%white%
+    echo %blue%------------------------------%white%
     echo.
     echo 1. Audacity
     echo 2. Equalizer APO
@@ -925,26 +907,25 @@ goto apps
     echo 8. VLC Media Player
     echo 9. Yt-dlp
     echo 0. Go Back
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install audacity -y"
-    if '%choice%'=='2' start powershell -command "choco install equalizerapo -y"
-    if '%choice%'=='3' start powershell -command "choco install gimp -y"
-    if '%choice%'=='4' start powershell -command "choco install handbrake -y"
-    if '%choice%'=='5' start powershell -command "choco install itunes -y"
-    if '%choice%'=='6' start powershell -command "choco install obs-studio -y"
-    if '%choice%'=='7' start powershell -command "choco install spotify -y"
-    if '%choice%'=='8' start powershell -command "choco install vlc -y"
-    if '%choice%'=='9' start powershell -command "choco install yt-dlp -y"
-    if '%choice%'=='0' goto apps
+    choice /c 1234567890 /n /m "Type the number: "
+    if errorlevel 10 goto apps
+    if errorlevel 9 start powershell -command "choco install yt-dlp -y"
+    if errorlevel 8 start powershell -command "choco install vlc -y"
+    if errorlevel 7 start powershell -command "choco install spotify -y"
+    if errorlevel 6 start powershell -command "choco install obs-studio -y"
+    if errorlevel 5 start powershell -command "choco install itunes -y"
+    if errorlevel 4 start powershell -command "choco install handbrake -y"
+    if errorlevel 3 start powershell -command "choco install gimp -y"
+    if errorlevel 2 start powershell -command "choco install equalizerapo -y"
+    if errorlevel 1 start powershell -command "choco install audacity -y"
 goto apps
+
 
 :utilities
     cls
-    echo ----------------------
-    echo   Utilities (Page 1)
-    echo ----------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Utilities (Page 1) %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. 7-Zip
     echo 2. AnyDesk
@@ -958,27 +939,25 @@ goto apps
     echo.
     echo 0. Go Back
     echo Press 'n' to go to the next page
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install 7zip -y"
-    if '%choice%'=='2' start powershell -command "choco install anydesk -y"
-    if '%choice%'=='3' start powershell -command "choco install bitwarden -y"
-    if '%choice%'=='4' start powershell -command "choco install crystaldiskmark -y"
-    if '%choice%'=='5' start powershell -command "choco install crystaldiskinfo -y"
-    if '%choice%'=='6' start powershell -command "choco install ddu -y"
-    if '%choice%'=='7' start powershell -command "choco install bleachbit -y"
-    if '%choice%'=='8' start powershell -command "choco install wiztree -y"
-    if '%choice%'=='9' start powershell -command "choco install qbittorrent -y"
-    if '%choice%'=='0' goto apps
-    if '%choice%'=='n' goto utilitiespage2
+    choice /c 1234567890n /n /m "Type the number: "
+    if errorlevel 11 goto utilitiespage2
+    if errorlevel 10 goto apps
+    if errorlevel 9 start powershell -command "choco install qbittorrent -y"
+    if errorlevel 8 start powershell -command "choco install wiztree -y"
+    if errorlevel 7 start powershell -command "choco install bleachbit -y"
+    if errorlevel 6 start powershell -command "choco install ddu -y"
+    if errorlevel 5 start powershell -command "choco install crystaldiskinfo -y"
+    if errorlevel 4 start powershell -command "choco install crystaldiskmark -y"
+    if errorlevel 3 start powershell -command "choco install bitwarden -y"
+    if errorlevel 2 start powershell -command "choco install anydesk -y"
+    if errorlevel 1 start powershell -command "choco install 7zip -y"
 goto apps
 
 :utilitiespage2
     cls
-    echo ----------------------
-    echo   Utilities (Page 2)
-    echo ----------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Utilities (Page 2) %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. Rufus
     echo 2. F.lux
@@ -993,22 +972,21 @@ goto apps
     echo 0. Go Back
     echo Press 'n' to go to the next page
     echo Press 'b' to go to the previous page
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install rufus -y"
-    if '%choice%'=='2' start powershell -command "choco install f.lux -y"
-    if '%choice%'=='3' start powershell -command "choco install googledrive -y"
-    if '%choice%'=='4' start powershell -command "choco install cpu-z -y"
-    if '%choice%'=='5' start powershell -command "choco install gpu-z -y"
-    if '%choice%'=='6' start powershell -command "choco install hwmonitor -y"
-    if '%choice%'=='7' goto mbam
-    if '%choice%'=='8' start powershell -command "choco install revo-uninstaller -y"
-    if '%choice%'=='9' start powershell -command "choco install teamviewer -y"
-    if '%choice%'=='0' goto apps
-    if '%choice%'=='b' goto utilities
-    if '%choice%'=='n' goto utilitiespage3
+    choice /c 1234567890nb /n /m "Type the number: "
+    if errorlevel 12 goto utilities
+    if errorlevel 11 goto utilitiespage3
+    if errorlevel 10 goto apps
+    if errorlevel 9 start powershell -command "choco install teamviewer -y"
+    if errorlevel 8 start powershell -command "choco install revo-uninstaller -y"
+    if errorlevel 7 goto mbam
+    if errorlevel 6 start powershell -command "choco install hwmonitor -y"
+    if errorlevel 5 start powershell -command "choco install gpu-z -y"
+    if errorlevel 4 start powershell -command "choco install cpu-z -y"
+    if errorlevel 3 start powershell -command "choco install googledrive -y"
+    if errorlevel 2 start powershell -command "choco install f.lux -y"
+    if errorlevel 1 start powershell -command "choco install rufus -y"
 goto apps
+
 
 :mbam
     cls
@@ -1023,9 +1001,9 @@ goto utilitiespage2
 
 :utilitiespage3
     cls
-    echo ----------------------
-    echo   Utilities (Page 3)
-    echo ----------------------
+    echo %blue%----------------------
+    echo   %pink%+%white% Utilities (Page 3) %pink%+%white%
+    echo %blue%----------------------%white%
     echo.
     echo 1. MSI Afterburner
     echo 2. Winfetch (Neofetch for windows)
@@ -1035,18 +1013,15 @@ goto utilitiespage2
     echo.
     echo 0. Go Back
     echo Press 'b' to go to the previous page
-    set choice=
-    set /p choice=Type the number. 
-    if not '%choice%'=='' set choice=%choice:~0,100%
-    if '%choice%'=='1' start powershell -command "choco install msiafterburner -y"
-    if '%choice%'=='2' start powershell -command "choco install winfetch -y"
-    if '%choice%'=='3' start powershell -command "choco install openrgb -y"
-    if '%choice%'=='4' start powershell -command "choco install virtualbox -y"
-    if '%choice%'=='5' start powershell -command "choco install parsec -y"
-    if '%choice%'=='0' goto apps
-    if '%choice%'=='b' goto utilitiespage2
+    choice /c 123450b /n /m "Type the number: "
+    if errorlevel 7 goto utilitiespage2
+    if errorlevel 6 goto apps
+    if errorlevel 5 start powershell -command "choco install parsec -y"
+    if errorlevel 4 start powershell -command "choco install virtualbox -y"
+    if errorlevel 3 start powershell -command "choco install openrgb -y"
+    if errorlevel 2 start powershell -command "choco install winfetch -y"
+    if errorlevel 1 start powershell -command "choco install msiafterburner -y"
 goto apps
-
 pause
 goto start
 
@@ -1186,12 +1161,13 @@ goto start
 
 :credits
 cls
- echo ==================================================================================================
- echo                                         +++ Credits +++
- echo --------------------------------------------------------------------------------------------------
+ echo %blue%==================================================================================================
+ echo                                         %pink%+++ %white%Credits %pink%+++
+ echo %blue%--------------------------------------------------------------------------------------------------%white%
  echo           This script features the Chris Titus Tech Winutil as Option 1 on the homepage
- echo       This script uses Microsoft Activation Scripts (massgrave.dev) for Windows Activation
+ echo       This script uses Microsoft Activation Scripts (%blue%massgrave.dev%white%) for Windows Activation
  echo               Thanks to PowerPCFan and Rage65 for making the rest of the script
- echo ===================================================================================================
- pause
+ echo %blue%===================================================================================================%white%
+ echo %pink%Press any key to go back.%white%
+ pause > nul
  goto start
