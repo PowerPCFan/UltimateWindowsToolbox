@@ -1,11 +1,11 @@
 $temp = $env:Temp
 
-cd $temp
+Set-Location $temp
 
 Remove-Item -Recurse -Force -Confirm:$false "UltimateWindowsToolbox"
 New-Item -Name "UltimateWindowsToolbox" -Type Directory
 
-cd "UltimateWindowsToolbox"
+Set-Location "UltimateWindowsToolbox"
 
 Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/ultimatewindowstoolbox.cmd -OutFile "ultimatewindowstoolbox.cmd"
 Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/welcome.txt -OutFile "welcome.txt"
