@@ -51,7 +51,7 @@ if %errorLevel% == 0 (
     echo.
     echo                                     %pink%[%white%7%pink%]%white% All-in-one Windows Tweak Script
     echo.
-    echo. 
+    echo.
     echo                                     %pink%[%white%C%pink%]%white% Credits
     echo.
     echo                                     %pink%[%white%E%pink%]%white% Exit
