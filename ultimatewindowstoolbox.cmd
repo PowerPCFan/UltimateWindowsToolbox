@@ -10,9 +10,6 @@ mode 175,38
 :: Enable ANSI Escape Sequences
 reg add "HKCU\CONSOLE" /v "VirtualTerminalLevel" /t REG_DWORD /d "1" /f  > nul
 
-::Enable Delayed Expansion
-setlocal EnableDelayedExpansion > nul
-
 net session >nul 2>&1
 if %errorLevel% == 0 (
     goto choco-check 
