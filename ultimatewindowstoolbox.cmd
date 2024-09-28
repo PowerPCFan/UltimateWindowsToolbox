@@ -1164,13 +1164,14 @@ goto start
     pause
     goto start
 
-    :wallpaper
-    cls
+:wallpaper
+cls
     cd %temp%\UltimateWindowsToolbox
     powershell -command "Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/wallpaper.ps1 -OutFile "wallpaper.ps1""
     powershell.exe ".\wallpaper.ps1"
     echo Press any key to return to the homepage.
     pause > nul
+goto start
 
 :credits
 cls
