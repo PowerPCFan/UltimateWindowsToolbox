@@ -19,6 +19,7 @@ if %errorLevel% == 0 (
     Exit
 )
 
+
 :choco-check
     cls
         if exist "%systemdrive%\ProgramData\chocolatey\bin\choco.exe" (
