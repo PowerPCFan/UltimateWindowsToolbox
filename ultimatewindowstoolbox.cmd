@@ -55,7 +55,7 @@ if %errorLevel% == 0 (
     echo.
     echo                                     !pink![!white!5!pink!]!white! Windows Tweaks                            !pink![!white!6!pink!]!white! Install Apps (Browsers, Utilities, Etc)
     echo.
-    echo                                     !pink![!white!7!pink!]!white! All-in-one Windows Tweak Script
+    echo                                     !pink![!white!7!pink!]!white! All-in-one Windows Tweak Script           !pink![!white!8!pink!]!white! Wallpaper Switcher
     echo.
     echo.
     echo                                     !pink![!white!C!pink!]!white! Credits
@@ -63,9 +63,10 @@ if %errorLevel% == 0 (
     echo                                     !pink![!white!E!pink!]!white! Exit
     echo                             !blue!================================================================================================================
     echo. !white!
-    choice /c 1234567ce /n /m "» "
-    if errorlevel 9 exit
-    if errorlevel 8 goto credits
+    choice /c 12345678ce /n /m "» "
+    if errorlevel 10 exit
+    if errorlevel 9 goto credits
+    if errorlevel 8 goto wallpaper
     if errorlevel 7 goto tweak-script
     if errorlevel 6 goto apps
     if errorlevel 5 goto windowstweaks
@@ -1161,7 +1162,15 @@ goto start
 
     echo More will be added to this script soon... check back later!
     pause
-    goto start 
+    goto start
+
+    :wallpaper
+    cls
+    cd %temp%\UltimateWindowsToolbox
+    powershell -command "Invoke-WebRequest https://raw.githubusercontent.com/PowerPCFan/UltimateWindowsToolbox/main/wallpaper.ps1 -OutFile "wallpaper.ps1""
+    powershell.exe ".\wallpaper.ps1"
+    echo Press any key to return to the homepage.
+    pause > nul
 
 :credits
 cls
