@@ -24,7 +24,7 @@ $label.AutoSize = $true
 $label.Location = New-Object System.Drawing.Point(10, 10)
 $form.Controls.Add($label)
 
-# Function to create wallpaper selection form
+# Function to create wallpaper selection form with scrolling
 function Show-Wallpapers {
     param (
         [string]$version,
@@ -34,13 +34,14 @@ function Show-Wallpapers {
 
     $wallpapersForm = New-Object System.Windows.Forms.Form
     $wallpapersForm.Text = "$version Wallpapers"
-    $wallpapersForm.Size = New-Object System.Drawing.Size(450, 750)
+    $wallpapersForm.Size = New-Object System.Drawing.Size(400, 400)
     $wallpapersForm.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
     $wallpapersForm.ForeColor = [System.Drawing.Color]::White
     $wallpapersForm.Font = New-Object System.Drawing.Font("Georgia", 10)
 
+    # Home button at the top-left
     $homeButton = New-Object System.Windows.Forms.Button
-    $homeButton.Text = "Home"
+    $homeButton.Text = "Back"
     $homeButton.Location = New-Object System.Drawing.Point(10, 10)
     $homeButton.Size = New-Object System.Drawing.Size(100, 30)
     $homeButton.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
@@ -48,8 +49,59 @@ function Show-Wallpapers {
     $homeButton.Add_Click({ $wallpapersForm.Close(); $form.Show() })
     $wallpapersForm.Controls.Add($homeButton)
 
+    # Apply button at the top-right
+    $applyButton = New-Object System.Windows.Forms.Button
+    $applyButton.Text = "Apply"
+    $applyButton.Location = New-Object System.Drawing.Point(280, 10)
+    $applyButton.Size = New-Object System.Drawing.Size(100, 30)
+    $applyButton.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
+    $applyButton.ForeColor = [System.Drawing.Color]::White
+    $applyButton.Add_Click({
+        $selectedWallpaperUrl = $null
+        foreach ($radioButton in $panel.Controls | Where-Object { $_ -is [System.Windows.Forms.RadioButton] }) {
+            if ($radioButton.Checked) {
+                $index = [Array]::IndexOf($names, $radioButton.Text)
+                $selectedWallpaperUrl = $wallpaperUrls[$index]
+                break
+            }
+        }
+
+        if ($selectedWallpaperUrl) {
+            try {
+                # Remove existing folder if it exists
+                if (Test-Path $env:Temp\Wallpapers) {
+                    Remove-Item $env:Temp\Wallpapers -Recurse -Force
+                }
+                # Create the new Wallpapers folder
+                mkdir "$env:Temp\Wallpapers"
+
+                # Download the wallpaper to the new folder
+                $tempPath = Join-Path $env:Temp\Wallpapers (Split-Path $selectedWallpaperUrl -Leaf)
+                Invoke-WebRequest -Uri $selectedWallpaperUrl -OutFile $tempPath
+
+                # Set the downloaded image as wallpaper using user32.dll
+                [Wallpaper]::SystemParametersInfo(20, 0, $tempPath, 3)
+
+                [System.Windows.Forms.MessageBox]::Show("Wallpaper applied successfully!")
+                $wallpapersForm.Close()
+            } catch {
+                [System.Windows.Forms.MessageBox]::Show("Error applying wallpaper: $_")
+            }
+        } else {
+            [System.Windows.Forms.MessageBox]::Show("Error: Please select a wallpaper.")
+        }
+    })
+    $wallpapersForm.Controls.Add($applyButton)
+
+    # Create a scrollable panel for the wallpapers
+    $panel = New-Object System.Windows.Forms.Panel
+    $panel.Location = New-Object System.Drawing.Point(10, 50)
+    $panel.Size = New-Object System.Drawing.Size(360, 320)
+    $panel.AutoScroll = $true
+    $panel.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
+
     # Create dynamic radio buttons for wallpapers
-    $yPosition = 50
+    $yPosition = 10
     foreach ($name in $names) {
         $radioButton = New-Object System.Windows.Forms.RadioButton
         $radioButton.Text = $name
@@ -57,54 +109,12 @@ function Show-Wallpapers {
         $radioButton.Size = New-Object System.Drawing.Size(300, 30)
         $radioButton.BackColor = [System.Drawing.Color]::FromArgb(30, 30, 30)
         $radioButton.ForeColor = [System.Drawing.Color]::White
-        $wallpapersForm.Controls.Add($radioButton)
-        $yPosition += 24
+        $panel.Controls.Add($radioButton)
+        $yPosition += 30
     }
 
-    # Add Apply button
-    $applyButton = New-Object System.Windows.Forms.Button
-    $applyButton.Text = "Apply"
-    $applyButton.Location = New-Object System.Drawing.Point(10, $yPosition)
-    $applyButton.Size = New-Object System.Drawing.Size(100, 30)
-    $applyButton.BackColor = [System.Drawing.Color]::FromArgb(45, 45, 45)
-    $applyButton.ForeColor = [System.Drawing.Color]::White
-	$applyButton.Add_Click({
-    $selectedWallpaperUrl = $null
-    foreach ($radioButton in $wallpapersForm.Controls | Where-Object { $_ -is [System.Windows.Forms.RadioButton] }) {
-        if ($radioButton.Checked) {
-            $index = [Array]::IndexOf($names, $radioButton.Text)
-            $selectedWallpaperUrl = $wallpaperUrls[$index]
-            break
-        }
-    }
-
-    if ($selectedWallpaperUrl) {
-        try {            
-			# Remove existing folder if it exists
-			if (Test-Path $env:Temp\Wallpapers) {
-            Remove-Item $env:Temp\Wallpapers -Recurse -Force
-        }			
-            # Create the new Wallpapers folder
-            mkdir "$env:Temp\Wallpapers"
-
-            # Download the wallpaper to the new folder
-            $tempPath = Join-Path $env:Temp\Wallpapers (Split-Path $selectedWallpaperUrl -Leaf)
-            Invoke-WebRequest -Uri $selectedWallpaperUrl -OutFile $tempPath
-
-            # Set the downloaded image as wallpaper using user32.dll
-            [Wallpaper]::SystemParametersInfo(20, 0, $tempPath, 3)
-
-            [System.Windows.Forms.MessageBox]::Show("Wallpaper applied successfully!")
-            $wallpapersForm.Close()
-        } catch {
-            [System.Windows.Forms.MessageBox]::Show("Error applying wallpaper: $_")
-        }
-    } else {
-        [System.Windows.Forms.MessageBox]::Show("Error: Please select a wallpaper.")
-    }
-})
-
-    $wallpapersForm.Controls.Add($applyButton)
+    # Add the panel to the form
+    $wallpapersForm.Controls.Add($panel)
 
     $wallpapersForm.ShowDialog()
 }
@@ -329,7 +339,5 @@ $win11Button.Add_Click({
 })
 $form.Controls.Add($win11Button)
 
-# Start the main form
-$form.Add_Shown({$form.Activate()})
-[void]$form.ShowDialog()
-
+# Run the main form
+$form.ShowDialog()
