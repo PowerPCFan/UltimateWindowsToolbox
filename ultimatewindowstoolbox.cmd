@@ -578,7 +578,7 @@ cls
     echo * Use the "Revert to default HOSTS file" option below
     echo * Use the "Revert to previous HOSTS file before tweaks" option below
     echo !blue!=====================================================================================================!white!
-    echo !pink![!white!1!pink!]!white! Enable the custom HOSTS file to block telemetry (Last Updated September 5, 2024)
+    echo !pink![!white!1!pink!]!white! Enable the custom HOSTS file to block telemetry (Last Updated October 16, 2024)
     echo !pink![!white!2!pink!]!white! Revert to default HOSTS file
     echo !pink![!white!3!pink!]!white! Revert to previous HOSTS file before tweaks (only works if you've done tweaks previously)
     echo !pink![!white!0!pink!]!white! Go Back
