@@ -40,6 +40,22 @@ if %errorLevel% == 0 (
             goto start
         )
 
+:choco-repair
+echo Are you sure you would like to proceed with repairing Chocolatey? 
+echo This will delete Chocolatey entirely, which can possibly cause apps installed via Choco to also uninstall.
+pause
+rmdir /s /q C:\Chocolatey > nul
+rmdir /s /q C:\ProgramData\chocolatey > nul
+@"%SystemRoot%\System32\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -InputFormat None -ExecutionPolicy Bypass -Command "[System.Net.ServicePointManager]::SecurityProtocol = 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))" && SET "PATH=%PATH%;%ALLUSERSPROFILE%\chocolatey\bin"
+cls
+goto choco-loop
+
+:choco-loop
+cls
+echo Chocolatey successfully repaired. Please close this window and reopen the UltimateWindowsToolbox script.
+pause > nul
+goto choco-loop
+
 :start
 	cls
 	chcp 65001 >nul 2>&1
@@ -57,15 +73,18 @@ if %errorLevel% == 0 (
     echo.
     echo                                     !pink![!white!7!pink!]!white! All-in-one Windows Tweak Script           !pink![!white!8!pink!]!white! Wallpaper Switcher
     echo.
+    echo                                     !pink![!white!9!pink!]!white! Repair Choco (run if you have problems with this script)
+    echo.
     echo.
     echo                                     !pink![!white!C!pink!]!white! Credits
     echo.
     echo                                     !pink![!white!E!pink!]!white! Exit
     echo                             !blue!================================================================================================================
     echo. !white!
-    choice /c 12345678ce /n /m "» "
-    if errorlevel 10 exit
-    if errorlevel 9 goto credits
+    choice /c 123456789ce /n /m "» "
+    if errorlevel 11 exit
+    if errorlevel 10 goto credits
+    if errorlevel 9 goto choco-repair
     if errorlevel 8 goto wallpaper
     if errorlevel 7 goto tweak-script
     if errorlevel 6 goto apps
@@ -409,6 +428,9 @@ cls
     pause
 goto windowstweaks
 
+:: I left off with adding brackets here (i was working from bottom to top of the script)
+:: hopefully it didn't mess anything up, everything SHOULD still work without the brackets
+
 :smartscreen
 cls
     echo !blue!~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~!white!
@@ -429,11 +451,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweaks
-    if errorlevel 2 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f > nul
-    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f > nul
-    cls
-    echo Process completed successfully. 
-    pause
+    if errorlevel 2 (
+        reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "0" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweaks
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v "EnableSmartScreen" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweaks
+    )
 goto windowstweaks
 
 :winerrorreporting
@@ -457,13 +488,34 @@ goto windowstweaks
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 12340 /n /m "» "
     if errorlevel 5 goto windowstweakspage2
-    if errorlevel 4 reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
-    if errorlevel 3 reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
-    if errorlevel 2 reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
-    if errorlevel 1 reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
-    cls
-    echo Process completed successfully. 
-    pause
+    if errorlevel 4 (
+        reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 3 (
+        reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 2 (
+        reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg add "HKCU\Software\Microsoft\Windows\Windows Error Reporting" /v "Disabled" /t REG_DWORD /d "0" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 :locationservices
@@ -481,11 +533,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage2
-    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
-    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
-    cls
-    echo Process completed successfully. 
-    pause
+    if errorlevel 2 (
+        reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Deny" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v "Value" /t REG_SZ /d "Allow" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 :storagesense
@@ -503,11 +564,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage2
-    if errorlevel 2 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
-    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
-    cls
-    echo Process completed successfully. 
-    pause
+    if errorlevel 2 (
+        reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "0" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "AllowStorageSenseGlobal" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 
@@ -558,11 +628,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage2
-    if errorlevel 2 reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
-    if errorlevel 1 reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
-    cls
-    echo Process completed successfully. 
-    pause
+    if errorlevel 2 (
+        reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "0" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SOFTWARE\Microsoft\WcmSvc\wifinetworkmanager\config" /v "AutoConnectAllowedOEM" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 :hosts-telemetry
@@ -643,11 +722,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage2
-    if errorlevel 2 reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
-    if errorlevel 1 reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
-cls
-echo Process completed successfully. 
-pause
+    if errorlevel 2 (
+        reg delete "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v "RealTimeIsUniversal" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 :copilot
@@ -664,11 +752,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage2
-    if errorlevel 2 reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
-    if errorlevel 1 reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
-cls
-echo Process completed successfully. 
-pause
+    if errorlevel 2 (
+        reg add "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /t REG_DWORD /d "1" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
+    if errorlevel 1 (
+        reg delete "HKCU\Software\Policies\Microsoft\Windows\WindowsCopilot" /v "TurnOffWindowsCopilot" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage2
+    )
 goto windowstweakspage2
 
 
@@ -682,11 +779,20 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 120 /n /m "» "
     if errorlevel 3 goto windowstweakspage3
-    if errorlevel 2 reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /f > nul
-    if errorlevel 1 reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /t REG_DWORD /d "2" /f > nul
-cls
-echo Process completed successfully. 
-pause
+    if errorlevel 2 (
+        reg delete "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage3
+    )
+    if errorlevel 1 (
+        reg add "HKLM\SOFTWARE\Policies\Google\Chrome" /v "ExtensionManifestV2Availability" /t REG_DWORD /d "2" /f > nul
+        cls
+        echo Process completed successfully. 
+        pause
+        goto windowstweakspage3
+    )
 goto windowstweakspage3
 
 :darkmode
@@ -770,10 +876,22 @@ cls
     echo !pink![!white!0!pink!]!white! Go Back
     choice /c 12340 /n /m "Type the number: "
     if errorlevel 5 goto apps
-    if errorlevel 4 start powershell -command "choco install microsoft-edge -y"
-    if errorlevel 3 start powershell -command "choco install brave -y"
-    if errorlevel 2 start powershell -command "choco install firefox -y"
-    if errorlevel 1 start powershell -command "choco install googlechrome -y"
+    if errorlevel 4 ( 
+        start powershell -command "choco install microsoft-edge -y"
+        goto browsers
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install brave -y"
+        goto browsers
+    )
+    if errorlevel 2 ( 
+        start powershell -command "choco install firefox -y"
+        goto browsers 
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install googlechrome -y"
+        goto browsers
+    )
 pause
 goto apps
 
@@ -793,13 +911,30 @@ goto apps
     echo 0. Go Back
     choice /c 1234560 /n /m "Type the number: "
     if errorlevel 7 goto apps
-    if errorlevel 6 start powershell -command "choco install zoom -y"
-    if errorlevel 5 start powershell -command "choco install telegram -y"
-    if errorlevel 4 start powershell -command "choco install slack -y"
-    if errorlevel 3 start powershell -command "choco install skype -y"
-    if errorlevel 2 start powershell -command "choco install signal -y"
-    if errorlevel 1 start powershell -command "choco install discord -y"
-
+    if errorlevel 6 ( 
+        start powershell -command "choco install zoom -y"
+        goto communications 
+    )
+    if errorlevel 5 (
+        start powershell -command "choco install telegram -y"
+        goto communications
+    )
+    if errorlevel 4 ( 
+        start powershell -command "choco install slack -y"
+        goto communications
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install skype -y"
+        goto communications
+    )
+    if errorlevel 2 ( 
+        start powershell -command "choco install signal -y"
+        goto communications 
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install discord -y"
+        goto communications
+    )
 pause
 goto apps
 
@@ -817,11 +952,26 @@ goto apps
     echo 0. Go Back
     choice /c 123450 /n /m "Type the number: "
     if errorlevel 6 goto apps
-    if errorlevel 5 start powershell -command "choco install visualstudio2022community -y"
-    if errorlevel 4 start powershell -command "choco install vscode -y"
-    if errorlevel 3 start powershell -command "choco install notepadplusplus -y"
-    if errorlevel 2 start powershell -command "choco install git -y"
-    if errorlevel 1 start powershell -command "choco install github-desktop -y"
+    if errorlevel 5 ( 
+        start powershell -command "choco install visualstudio2022community -y"
+        goto development
+    )
+    if errorlevel 4 ( 
+        start powershell -command "choco install vscode -y"
+        goto development
+    )
+    if errorlevel 3 ( 
+        start powershell -command "choco install notepadplusplus -y"
+        goto development
+    )
+    if errorlevel 2 ( 
+        start powershell -command "choco install git -y"
+        goto development
+    )
+    if errorlevel 1 ( 
+        start powershell -command "choco install github-desktop -y"
+        goto development
+    )
 pause
 goto apps
 
@@ -839,11 +989,26 @@ goto apps
     echo 0. Go Back
     choice /c 123450 /n /m "Type the number: "
     if errorlevel 6 goto apps
-    if errorlevel 5 start powershell -command "choco install sumatrapdf -y"
-    if errorlevel 4 start powershell -command "choco install openoffice -y"
-    if errorlevel 3 start powershell -command "choco install libreoffice-fresh -y"
-    if errorlevel 2 start powershell -command "choco install foxitreader -y"
-    if errorlevel 1 start powershell -command "choco install adobereader -y"
+    if errorlevel 5 (
+        start powershell -command "choco install sumatrapdf -y"
+        goto pdf
+    )
+    if errorlevel 4 (
+        start powershell -command "choco install openoffice -y"
+        goto pdf
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install libreoffice-fresh -y"
+        goto pdf
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install foxitreader -y"
+        goto pdf
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install adobereader -y"
+        goto pdf
+    )
 pause
 goto apps
 
@@ -860,9 +1025,18 @@ goto apps
     echo 0. Go Back
     choice /c 12340 /n /m "Type the number: "
     if errorlevel 5 goto apps
-    if errorlevel 4 start powershell -command "choco install steam -y" 
-    if errorlevel 3 start powershell -command "choco install nvidia-geforce-now -y"
-    if errorlevel 2 start powershell -command "choco install epicgameslauncher -y"
+    if errorlevel 4 (
+        start powershell -command "choco install steam -y"
+        goto games
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install nvidia-geforce-now -y"
+        goto games
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install epicgameslauncher -y"
+        goto games
+    )
     if errorlevel 1 goto atlauncher
 goto apps
 
@@ -890,10 +1064,22 @@ goto games
     echo 0. Go Back
     choice /c 12340 /n /m "Type the number: "
     if errorlevel 5 goto apps
-    if errorlevel 4 start powershell -command "choco install vcredist140 -y"
-    if errorlevel 3 start powershell -command "choco install procmon -y"
-    if errorlevel 2 start powershell -command "choco install powerautomatedesktop -y"
-    if errorlevel 1 start powershell -command "choco install autoruns -y"
+    if errorlevel 4 (
+        start powershell -command "choco install vcredist140 -y"
+        goto msutilities
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install procmon -y"
+        goto msutilities
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install powerautomatedesktop -y"
+        goto msutilities
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install autoruns -y"
+        goto msutilities
+    )
 goto apps
 
 :multimedia
@@ -914,15 +1100,42 @@ goto apps
     echo 0. Go Back
     choice /c 1234567890 /n /m "Type the number: "
     if errorlevel 10 goto apps
-    if errorlevel 9 start powershell -command "choco install yt-dlp -y"
-    if errorlevel 8 start powershell -command "choco install vlc -y"
-    if errorlevel 7 start powershell -command "choco install spotify -y"
-    if errorlevel 6 start powershell -command "choco install obs-studio -y"
-    if errorlevel 5 start powershell -command "choco install itunes -y"
-    if errorlevel 4 start powershell -command "choco install handbrake -y"
-    if errorlevel 3 start powershell -command "choco install gimp -y"
-    if errorlevel 2 start powershell -command "choco install equalizerapo -y"
-    if errorlevel 1 start powershell -command "choco install audacity -y"
+    if errorlevel 9 (
+        start powershell -command "choco install yt-dlp -y"
+        goto multimedia
+    )
+    if errorlevel 8 (
+        start powershell -command "choco install vlc -y"
+        goto multimedia
+    )
+    if errorlevel 7 (
+        start powershell -command "choco install spotify -y"
+        goto multimedia
+    )
+    if errorlevel 6 (
+        start powershell -command "choco install obs-studio -y"
+        goto multimedia
+    )
+    if errorlevel 5 (
+        start powershell -command "choco install itunes -y"
+        goto multimedia
+    )
+    if errorlevel 4 (
+        start powershell -command "choco install handbrake -y"
+        goto multimedia
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install gimp -y"
+        goto multimedia
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install equalizerapo -y"
+        goto multimedia
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install audacity -y"
+        goto multimedia
+    )
 goto apps
 
 
@@ -947,15 +1160,42 @@ goto apps
     choice /c 1234567890n /n /m "Type the number: "
     if errorlevel 11 goto utilitiespage2
     if errorlevel 10 goto apps
-    if errorlevel 9 start powershell -command "choco install qbittorrent -y"
-    if errorlevel 8 start powershell -command "choco install wiztree -y"
-    if errorlevel 7 start powershell -command "choco install bleachbit -y"
-    if errorlevel 6 start powershell -command "choco install ddu -y"
-    if errorlevel 5 start powershell -command "choco install crystaldiskinfo -y"
-    if errorlevel 4 start powershell -command "choco install crystaldiskmark -y"
-    if errorlevel 3 start powershell -command "choco install bitwarden -y"
-    if errorlevel 2 start powershell -command "choco install anydesk -y"
-    if errorlevel 1 start powershell -command "choco install 7zip -y"
+    if errorlevel 9 (
+        start powershell -command "choco install qbittorrent -y"
+        goto utilities
+    )
+    if errorlevel 8 (
+        start powershell -command "choco install wiztree -y"
+        goto utilities
+    )
+    if errorlevel 7 (
+        start powershell -command "choco install bleachbit -y"
+        goto utilities
+    )
+    if errorlevel 6 (
+        start powershell -command "choco install ddu -y"
+        goto utilities
+    )
+    if errorlevel 5 (
+        start powershell -command "choco install crystaldiskinfo -y"
+        goto utilities
+    )
+    if errorlevel 4 (
+        start powershell -command "choco install crystaldiskmark -y"
+        goto utilities
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install bitwarden -y"
+        goto utilities
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install anydesk -y"
+        goto utilities
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install 7zip -y"
+        goto utilities
+    )
 goto apps
 
 :utilitiespage2
@@ -981,15 +1221,39 @@ goto apps
     if errorlevel 12 goto utilities
     if errorlevel 11 goto utilitiespage3
     if errorlevel 10 goto apps
-    if errorlevel 9 start powershell -command "choco install teamviewer -y"
-    if errorlevel 8 start powershell -command "choco install revo-uninstaller -y"
+    if errorlevel 9 (
+        start powershell -command "choco install teamviewer -y"
+        goto utilitiespage2
+    )
+    if errorlevel 8 (
+        start powershell -command "choco install revo-uninstaller -y"
+        goto utilitiespage2
+    )
     if errorlevel 7 goto mbam
-    if errorlevel 6 start powershell -command "choco install hwmonitor -y"
-    if errorlevel 5 start powershell -command "choco install gpu-z -y"
-    if errorlevel 4 start powershell -command "choco install cpu-z -y"
-    if errorlevel 3 start powershell -command "choco install googledrive -y"
-    if errorlevel 2 start powershell -command "choco install f.lux -y"
-    if errorlevel 1 start powershell -command "choco install rufus -y"
+    if errorlevel 6 (
+        start powershell -command "choco install hwmonitor -y"
+        goto utilitiespage2
+    )
+    if errorlevel 5 (
+        start powershell -command "choco install gpu-z -y"
+        goto utilitiespage2
+    )
+    if errorlevel 4 (
+        start powershell -command "choco install cpu-z -y"
+        goto utilitiespage2
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install googledrive -y"
+        goto utilitiespage2
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install f.lux -y"
+        goto utilitiespage2
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install rufus -y"
+        goto utilitiespage2
+    )
 goto apps
 
 
@@ -1021,11 +1285,26 @@ goto utilitiespage2
     choice /c 123450b /n /m "Type the number: "
     if errorlevel 7 goto utilitiespage2
     if errorlevel 6 goto apps
-    if errorlevel 5 start powershell -command "choco install parsec -y"
-    if errorlevel 4 start powershell -command "choco install virtualbox -y"
-    if errorlevel 3 start powershell -command "choco install openrgb -y"
-    if errorlevel 2 start powershell -command "choco install winfetch -y"
-    if errorlevel 1 start powershell -command "choco install msiafterburner -y"
+    if errorlevel 5 (
+        start powershell -command "choco install parsec -y"
+        goto utilitiespage3
+    )
+    if errorlevel 4 (
+        start powershell -command "choco install virtualbox -y"
+        goto utilitiespage3
+    )
+    if errorlevel 3 (
+        start powershell -command "choco install openrgb -y"
+        goto utilitiespage3
+    )
+    if errorlevel 2 (
+        start powershell -command "choco install winfetch -y"
+        goto utilitiespage3
+    )
+    if errorlevel 1 (
+        start powershell -command "choco install msiafterburner -y"
+        goto utilitiespage3
+    )
 goto apps
 pause
 goto start
