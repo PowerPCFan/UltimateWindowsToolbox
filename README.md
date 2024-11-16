@@ -1,5 +1,7 @@
 # UltimateWindowsToolbox
 
+## USE WITH CAUTION - fatal errors discovered, I am currently working on fixing them.
+
 Just a simple utility to change some basic Windows functions. I plan on expanding this soon. 
 
 ## Run instructions:
